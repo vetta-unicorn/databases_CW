@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace databases_CW.DB
+namespace databases_CW.Instances
 {
+    // автор
     public class Author
     {
         public int id { get; set; }
@@ -16,6 +17,7 @@ namespace databases_CW.DB
         public List<Book> books { get; set; } = new List<Book>();
     }
 
+    // книга
     public class Book
     {
         public int id { get; set; }
@@ -26,5 +28,18 @@ namespace databases_CW.DB
         public string annotation { get; set; }
 
         public List<Author> authors { get; set; } = new List<Author>();
+        public List<Item> items { get; set; } = new List<Item>();
     }
+
+    // экземпляр книги
+    public class Item
+    {
+        public int id { get; set; }
+        public decimal price { get; set; }
+        public Book book { get; set; } = new Book();
+        public Supply supply { get; set; } = new Supply();
+        public Order order { get; set; } = new Order();
+    }
+
+
 }
