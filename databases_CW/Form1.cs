@@ -20,6 +20,7 @@ namespace databases_CW
         {
             AuthService service = new AuthService();
             DB_User user = service.AuthenticateUser("adm.elisabeth", "adm");
+            //service.HashAllUsers();
         }
     }
 }
