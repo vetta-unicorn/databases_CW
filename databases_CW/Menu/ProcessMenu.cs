@@ -13,7 +13,7 @@ namespace databases_CW.Menu
     {
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
 
-        public List<Item> menu_items;
+        public List<Item> menu_items { get; private set; }
 
         public ProcessMenu()
         {

@@ -21,43 +21,30 @@ namespace databases_CW.Menu
             this.function_name = function_name;
             this.menu_order = menu_order;
         }
+
+        public Item() { }
     }
 
-    //public class Item
-    //{
-    //    public int level { get; private set; }
-    //    public string name { get; private set; }
-    //    public string clickName { get; private set; }
 
-    //    public Item(int lev, string n, string _clickName)
-    //    {
-    //        level = lev;
-    //        name = n;
-    //        clickName = _clickName;
-    //    }
+    public class Tree
+    {
+        public Item root { get; private set; }
+        public List<Tree> children { get; private set; }
 
-    //    public Item() { }
-    //}
+        public Tree(Item root)
+        {
+            this.root = root;
+            root = new Item();
+            children = new List<Tree>();
+        }
 
-    //public class Tree
-    //{
-    //    public Item root { get; private set; }
-    //    public List<Tree> children { get; private set; }
+        public Tree() { }
 
-    //    public Tree(Item root)
-    //    {
-    //        this.root = root;
-    //        root = new Item();
-    //        children = new List<Tree>();
-    //    }
-
-    //    public Tree() { }
-
-    //    public void addChild(Tree child)
-    //    {
-    //        children.Add(child);
-    //    }
-    //}
+        public void addChild(Tree child)
+        {
+            children.Add(child);
+        }
+    }
 
 
 }

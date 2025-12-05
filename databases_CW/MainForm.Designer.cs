@@ -30,6 +30,8 @@
         {
             button1 = new Button();
             menuStrip1 = new MenuStrip();
+            dataGridViewReferences = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -47,20 +49,31 @@
             menuStrip1.ImageScalingSize = new Size(20, 20);
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 28);
+            menuStrip1.Size = new Size(800, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
+            // 
+            // dataGridViewReferences
+            // 
+            dataGridViewReferences.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewReferences.Location = new Point(12, 81);
+            dataGridViewReferences.Name = "dataGridViewReferences";
+            dataGridViewReferences.RowHeadersWidth = 51;
+            dataGridViewReferences.Size = new Size(776, 275);
+            dataGridViewReferences.TabIndex = 2;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(dataGridViewReferences);
             Controls.Add(button1);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "MainForm";
             Text = "MainForm";
+            ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -69,5 +82,6 @@
 
         private Button button1;
         private MenuStrip menuStrip1;
+        private DataGridView dataGridViewReferences;
     }
 }
