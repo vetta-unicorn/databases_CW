@@ -24,6 +24,8 @@ namespace databases_CW
             InitializeComponent();
             menu = new MenuLibrary.Menu(filePath);
             InitializeMenuStrip(menu.menu);
+            menuStrip1.BackColor = Color.FromArgb(224, 255, 255);
+            menuStrip1.Font = new Font("STFangsong", 13f, FontStyle.Regular);
         }
 
         public void SetStatus(ToolStripMenuItem menuItem, Tree tree)

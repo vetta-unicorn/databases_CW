@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookshopModels\BookshopModels.csproj" />
     <ProjectReference Include="..\MenuLibrary\MenuLibrary.csproj" />
   </ItemGroup>
 
