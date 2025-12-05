@@ -9,9 +9,9 @@ using databases_CW.DB;
 
 namespace databases_CW
 {
-    public partial class Form1 : Form
+    public partial class Authorise : Form
     {
-        public Form1()
+        public Authorise()
         {
             InitializeComponent();
         }

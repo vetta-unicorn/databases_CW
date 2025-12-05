@@ -1,6 +1,6 @@
 ﻿namespace databases_CW
 {
-    partial class Form1
+    partial class Authorise
     {
         /// <summary>
         ///  Required designer variable.
@@ -41,14 +41,14 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // Form1
+            // Authorise
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(button1);
-            Name = "Form1";
-            Text = "Form1";
+            Name = "Authorise";
+            Text = "Authorisation";
             ResumeLayout(false);
         }
 
