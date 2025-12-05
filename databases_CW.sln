@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "databases_CW", "databases_CW\databases_CW.csproj", "{F9E115A8-ABD5-40A6-8CC7-1B4B36BBFCCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuLibrary", "MenuLibrary\MenuLibrary.csproj", "{647F31D0-14CE-4536-957F-44C94542A08D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F9E115A8-ABD5-40A6-8CC7-1B4B36BBFCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9E115A8-ABD5-40A6-8CC7-1B4B36BBFCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9E115A8-ABD5-40A6-8CC7-1B4B36BBFCCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{647F31D0-14CE-4536-957F-44C94542A08D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{647F31D0-14CE-4536-957F-44C94542A08D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{647F31D0-14CE-4536-957F-44C94542A08D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{647F31D0-14CE-4536-957F-44C94542A08D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
