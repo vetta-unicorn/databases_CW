@@ -33,6 +33,7 @@
             dataGridViewReferences = new DataGridView();
             button2 = new Button();
             button3 = new Button();
+            button4 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).BeginInit();
             SuspendLayout();
             // 
@@ -87,11 +88,23 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // button4
+            // 
+            button4.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button4.Location = new Point(132, 469);
+            button4.Name = "button4";
+            button4.Size = new Size(170, 29);
+            button4.TabIndex = 5;
+            button4.Text = "Фильтр";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 465);
+            ClientSize = new Size(800, 534);
+            Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(dataGridViewReferences);
@@ -112,5 +125,6 @@
         private DataGridView dataGridViewReferences;
         private Button button2;
         private Button button3;
+        private Button button4;
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace databases_CW.Menu
 {
@@ -102,6 +104,46 @@ namespace databases_CW.Menu
                 MessageBox.Show($"Ошибка обновления записи: {ex.Message}", "Ошибка",
                                MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
+        }
+
+
+
+        public DataTable FilterRecords(string tableName, string connectionString,
+    DataGridView dataGridView, string searchText)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Используем LIKE для поиска по частичному совпадению
+                    string query = $"SELECT * FROM {tableName} WHERE name LIKE @searchText ORDER BY id";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        // Добавляем % для поиска по части строки
+                        command.Parameters.AddWithValue("@searchText", $"%{searchText}%");
+
+                        var dataTable = new DataTable();
+                        using (var adapter = new NpgsqlDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
+
+                        // Обновляем DataGridView
+                        dataGridView.DataSource = dataTable;
+
+                        return dataTable;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка фильтрации записей: {ex.Message}", "Ошибка",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
             }
         }
     }

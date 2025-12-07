@@ -33,7 +33,7 @@ namespace databases_CW
             menuStrip1.BackColor = Color.FromArgb(224, 255, 255);
             menuStrip1.Font = new Font("STFangsong", 12f, FontStyle.Regular);
             record = new Records();
-            
+
             button2.Visible = false; button2.Enabled = false;
             button3.Visible = false; button3.Enabled = false;
         }
@@ -214,6 +214,25 @@ namespace databases_CW
                                       MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
+            }
+        }
+
+        // фильтрация
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // Создаем форму для ввода данных
+            var addForm = new AddEditForm(currentTableName, null);
+            if (addForm.ShowDialog() == DialogResult.OK)
+            {
+                // Получаем данные из формы
+                var values = new Dictionary<string, object>
+            {
+                { "name", addForm.RecordName }
+            };
+
+                // Добавляем запись
+                record.FilterRecords(currentTableName, connectionString, values);
+
             }
         }
     }

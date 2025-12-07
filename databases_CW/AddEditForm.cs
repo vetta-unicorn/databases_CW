@@ -15,7 +15,7 @@ namespace databases_CW
     {
         public string RecordName;
         private bool isEditMode;
-        private string tableName;
+        private bool idSearchMode;
         public AddEditForm(string tableName, int? id = null, string currentName = "")
         {
             InitializeComponent();
