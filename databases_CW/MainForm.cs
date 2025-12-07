@@ -22,6 +22,7 @@ namespace databases_CW
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
         private DB_Dicrectories directories = new DB_Dicrectories();
         private string currentTableName;
+        Records record;
         public MainForm()
         {
             InitializeComponent();
@@ -31,8 +32,11 @@ namespace databases_CW
             InitializeMenuStrip(table.menu);
             menuStrip1.BackColor = Color.FromArgb(224, 255, 255);
             menuStrip1.Font = new Font("STFangsong", 12f, FontStyle.Regular);
+            record = new Records();
+            
+            button2.Visible = false; button2.Enabled = false;
+            button3.Visible = false; button3.Enabled = false;
         }
-
         public void SetStatus(ToolStripMenuItem menuitem, Tree tree)
         {
             menuitem.Visible = true;
@@ -106,6 +110,8 @@ namespace databases_CW
                     {
                         directories.ChooseTask(child.root, connectionString, dataGridViewReferences);
                         currentTableName = child.root.function_name;
+                        button3.Visible = true; button3.Enabled = true;
+                        button2.Visible = true; button2.Enabled = true;
                     };
                 }
                 else
@@ -122,102 +128,6 @@ namespace databases_CW
                 }
 
                 parentMenuItem.DropDownItems.Add(childMenuItem);
-            }
-        }
-
-        public bool AddRecord(string tableName, string connectionString, Dictionary<string, object> values)
-        {
-            try
-            {
-                using (var connection = new NpgsqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    // Создаем параметризованный запрос
-                    var columns = string.Join(", ", values.Keys);
-                    var parameters = string.Join(", ", values.Keys.Select(k => "@" + k));
-
-                    string query = $"INSERT INTO {tableName} ({columns}) VALUES ({parameters}) RETURNING id";
-
-                    using (var command = new NpgsqlCommand(query, connection))
-                    {
-                        foreach (var kvp in values)
-                        {
-                            command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
-                        }
-
-                        var newId = command.ExecuteScalar();
-                        return newId != null;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка добавления записи: {ex.Message}", "Ошибка",
-                               MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-        public bool DeleteRecord(string tableName, string connectionString, int id)
-        {
-            try
-            {
-                using (var connection = new NpgsqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    string query = $"DELETE FROM {tableName} WHERE id = @id";
-
-                    using (var command = new NpgsqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id", id);
-
-                        int rowsAffected = command.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка удаления записи: {ex.Message}", "Ошибка",
-                               MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
-        public bool UpdateRecord(string tableName, string connectionString, int id, Dictionary<string, object> values)
-        {
-            try
-            {
-                using (var connection = new NpgsqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    // Создаем SET часть запроса
-                    var setClause = string.Join(", ", values.Keys.Select(k => $"{k} = @{k}"));
-
-                    string query = $"UPDATE {tableName} SET {setClause} WHERE id = @id";
-
-                    using (var command = new NpgsqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id", id);
-
-                        foreach (var kvp in values)
-                        {
-                            command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
-                        }
-
-                        int rowsAffected = command.ExecuteNonQuery();
-                        return rowsAffected > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка обновления записи: {ex.Message}", "Ошибка",
-                               MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
             }
         }
 
@@ -243,7 +153,7 @@ namespace databases_CW
             };
 
                 // Добавляем запись
-                if (AddRecord(currentTableName, connectionString, values))
+                if (record.AddRecord(currentTableName, connectionString, values))
                 {
                     // Обновляем DataGridView
                     directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
@@ -264,7 +174,7 @@ namespace databases_CW
                 if (MessageBox.Show("Вы уверены, что хотите удалить эту запись?", "Подтверждение",
                                   MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    if (DeleteRecord(currentTableName, connectionString, id))
+                    if (record.DeleteRecord(currentTableName, connectionString, id))
                     {
                         // Обновляем DataGridView
                         directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
@@ -297,7 +207,7 @@ namespace databases_CW
                     { "name", editForm.RecordName }
                 };
 
-                    if (UpdateRecord(currentTableName, connectionString, id, values))
+                    if (record.UpdateRecord(currentTableName, connectionString, id, values))
                     {
                         directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
                         MessageBox.Show("Запись успешно обновлена!", "Успех",

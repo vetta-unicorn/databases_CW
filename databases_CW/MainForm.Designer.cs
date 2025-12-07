@@ -68,9 +68,9 @@
             // button2
             // 
             button2.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button2.Location = new Point(121, 378);
+            button2.Location = new Point(132, 378);
             button2.Name = "button2";
-            button2.Size = new Size(165, 29);
+            button2.Size = new Size(170, 29);
             button2.TabIndex = 3;
             button2.Text = "Добавить запись";
             button2.UseVisualStyleBackColor = true;
@@ -79,9 +79,9 @@
             // button3
             // 
             button3.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button3.Location = new Point(121, 413);
+            button3.Location = new Point(132, 424);
             button3.Name = "button3";
-            button3.Size = new Size(165, 29);
+            button3.Size = new Size(170, 29);
             button3.TabIndex = 4;
             button3.Text = "Удалить запись";
             button3.UseVisualStyleBackColor = true;
