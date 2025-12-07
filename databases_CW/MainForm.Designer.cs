@@ -31,11 +31,14 @@
             button1 = new Button();
             menuStrip1 = new MenuStrip();
             dataGridViewReferences = new DataGridView();
+            button2 = new Button();
+            button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).BeginInit();
             SuspendLayout();
             // 
             // button1
             // 
+            button1.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
             button1.Location = new Point(12, 378);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
@@ -62,11 +65,35 @@
             dataGridViewReferences.Size = new Size(776, 275);
             dataGridViewReferences.TabIndex = 2;
             // 
+            // button2
+            // 
+            button2.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button2.Location = new Point(121, 378);
+            button2.Name = "button2";
+            button2.Size = new Size(165, 29);
+            button2.TabIndex = 3;
+            button2.Text = "Добавить запись";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // button3
+            // 
+            button3.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button3.Location = new Point(121, 413);
+            button3.Name = "button3";
+            button3.Size = new Size(165, 29);
+            button3.TabIndex = 4;
+            button3.Text = "Удалить запись";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 465);
+            Controls.Add(button3);
+            Controls.Add(button2);
             Controls.Add(dataGridViewReferences);
             Controls.Add(button1);
             Controls.Add(menuStrip1);
@@ -83,5 +110,7 @@
         private Button button1;
         private MenuStrip menuStrip1;
         private DataGridView dataGridViewReferences;
+        private Button button2;
+        private Button button3;
     }
 }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using databases_CW.Menu;
 using Npgsql;
+using databases_CW.DB;
 
 namespace databases_CW
 {
@@ -19,9 +20,12 @@ namespace databases_CW
     {
         private delegate void PrintDelegate(string message);
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
+        private DB_Dicrectories directories = new DB_Dicrectories();
+        private string currentTableName;
         public MainForm()
         {
             InitializeComponent();
+            dataGridViewReferences.CellDoubleClick += dataGridViewReferences_CellDoubleClick;
             TableMenu table = new TableMenu();
             table.SetMenu();
             InitializeMenuStrip(table.menu);
@@ -100,7 +104,8 @@ namespace databases_CW
                     // Если это конечный пункт меню (таблица-справочник)
                     childMenuItem.Click += (sender, e) =>
                     {
-                        LoadTableData(child.root.function_name);
+                        directories.ChooseTask(child.root, connectionString, dataGridViewReferences);
+                        currentTableName = child.root.function_name;
                     };
                 }
                 else
@@ -120,37 +125,99 @@ namespace databases_CW
             }
         }
 
-        private void LoadTableData(string tableName)
+        public bool AddRecord(string tableName, string connectionString, Dictionary<string, object> values)
         {
             try
             {
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-                    string query = $"SELECT * FROM {tableName}";
+
+                    // Создаем параметризованный запрос
+                    var columns = string.Join(", ", values.Keys);
+                    var parameters = string.Join(", ", values.Keys.Select(k => "@" + k));
+
+                    string query = $"INSERT INTO {tableName} ({columns}) VALUES ({parameters}) RETURNING id";
 
                     using (var command = new NpgsqlCommand(query, connection))
                     {
-                        var dataTable = new DataTable();
-                        using (var adapter = new NpgsqlDataAdapter(command))
+                        foreach (var kvp in values)
                         {
-                            adapter.Fill(dataTable);
+                            command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
                         }
 
-                        // Настройка DataGridView
-                        dataGridViewReferences.DataSource = dataTable;
-                        dataGridViewReferences.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                        dataGridViewReferences.Visible = true;
-
-                        // Опционально: добавить заголовок
-                        // this.Text = $"Справочник: {tableName}";
+                        var newId = command.ExecuteScalar();
+                        return newId != null;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+                MessageBox.Show($"Ошибка добавления записи: {ex.Message}", "Ошибка",
                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public bool DeleteRecord(string tableName, string connectionString, int id)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = $"DELETE FROM {tableName} WHERE id = @id";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка удаления записи: {ex.Message}", "Ошибка",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public bool UpdateRecord(string tableName, string connectionString, int id, Dictionary<string, object> values)
+        {
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Создаем SET часть запроса
+                    var setClause = string.Join(", ", values.Keys.Select(k => $"{k} = @{k}"));
+
+                    string query = $"UPDATE {tableName} SET {setClause} WHERE id = @id";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+
+                        foreach (var kvp in values)
+                        {
+                            command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
+                        }
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка обновления записи: {ex.Message}", "Ошибка",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
 
@@ -162,6 +229,82 @@ namespace databases_CW
             this.Hide();
         }
 
+        // добавить запись
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Создаем форму для ввода данных
+            var addForm = new AddEditForm(currentTableName, null);
+            if (addForm.ShowDialog() == DialogResult.OK)
+            {
+                // Получаем данные из формы
+                var values = new Dictionary<string, object>
+            {
+                { "name", addForm.RecordName }
+            };
 
+                // Добавляем запись
+                if (AddRecord(currentTableName, connectionString, values))
+                {
+                    // Обновляем DataGridView
+                    directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+                    MessageBox.Show("Запись успешно добавлена!", "Успех",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        // удалить запись
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewReferences.SelectedRows.Count > 0)
+            {
+                var selectedRow = dataGridViewReferences.SelectedRows[0];
+                int id = Convert.ToInt32(selectedRow.Cells["id"].Value);
+
+                if (MessageBox.Show("Вы уверены, что хотите удалить эту запись?", "Подтверждение",
+                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    if (DeleteRecord(currentTableName, connectionString, id))
+                    {
+                        // Обновляем DataGridView
+                        directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+                        MessageBox.Show("Запись успешно удалена!", "Успех",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите запись для удаления", "Информация",
+                              MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // Двойной клик для редактирования
+        private void dataGridViewReferences_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                var row = dataGridViewReferences.Rows[e.RowIndex];
+                int id = Convert.ToInt32(row.Cells["id"].Value);
+                string name = row.Cells["name"].Value.ToString();
+
+                var editForm = new AddEditForm(currentTableName, id, name);
+                if (editForm.ShowDialog() == DialogResult.OK)
+                {
+                    var values = new Dictionary<string, object>
+                {
+                    { "name", editForm.RecordName }
+                };
+
+                    if (UpdateRecord(currentTableName, connectionString, id, values))
+                    {
+                        directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+                        MessageBox.Show("Запись успешно обновлена!", "Успех",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+        }
     }
 }
