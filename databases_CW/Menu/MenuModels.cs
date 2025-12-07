@@ -34,13 +34,12 @@ namespace databases_CW.Menu
         public Tree(Item root)
         {
             this.root = root;
-            root = new Item();
             children = new List<Tree>();
         }
 
         public Tree() { }
 
-        public void addChild(Tree child)
+        public void AddChild(Tree child)
         {
             children.Add(child);
         }

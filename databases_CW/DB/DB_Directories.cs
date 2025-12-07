@@ -14,10 +14,7 @@ namespace databases_CW.DB
         public void ChooseTask(Item item, string connectionString, DataGridView dataGridViewReferences)
         {
             // Справочники
-            if (item.parent_id == 1)
-            {
-                LoadTableData(item.function_name, connectionString, dataGridViewReferences);
-            }
+            LoadTableData(item.function_name, connectionString, dataGridViewReferences);
         }
 
         public void LoadTableData(string tableName, string connectionString, DataGridView dataGridViewReferences)

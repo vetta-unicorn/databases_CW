@@ -16,13 +16,21 @@ namespace databases_CW
         public string RecordName;
         private bool isEditMode;
         private bool idSearchMode;
-        public AddEditForm(string tableName, int? id = null, string currentName = "")
+        private string tableName;
+        public AddEditForm(string tableName, int? id = null, string currentName = "",
+            bool isSearchMode = false)
         {
             InitializeComponent();
             this.tableName = tableName;
             this.isEditMode = id.HasValue;
 
-            if (isEditMode)
+            if (isSearchMode)
+            {
+                this.Text = $"Поиск в {tableName}";
+                button1.Text = "Найти";
+            }
+
+            else if (isEditMode)
             {
                 this.Text = $"Редактирование {tableName}";
                 txtName.Text = currentName;

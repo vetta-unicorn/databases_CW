@@ -20,7 +20,8 @@ namespace databases_CW.Menu
 
         public void SetMenu()
         {
-            for (int i = 0; i < menu_handler.menu_items.Count; i++)
+            int i;
+            for (i = 0; i < menu_handler.menu_items.Count; i++)
             {
                 Tree tree = new Tree(menu_handler.menu_items[i]);
 
@@ -28,34 +29,40 @@ namespace databases_CW.Menu
                 {
                     menu.Add(tree);
 
-                    if (menu_handler.menu_items[i + 1].parent_id == 1)
+                    if (menu_handler.menu_items[i + 1].parent_id == 1 || menu_handler.menu_items[i + 1].parent_id == 10
+                        || menu_handler.menu_items[i + 1].parent_id == 15 || menu_handler.menu_items[i + 1].parent_id == 22
+                        || menu_handler.menu_items[i + 1].parent_id == 26)
                     {
-                        SetSubMenu(tree, i);
+                        int position = SetSubMenu(tree, i);
+                        i = position - 1;
                     }
                 }
 
             }
         }
 
-        public void SetSubMenu(Tree root, int position)
+        public int SetSubMenu(Tree root, int position)
         {
-            for (int i = position + 1; i < menu_handler.menu_items.Count; i++)
+            int i;
+            for (i = position + 1; i < menu_handler.menu_items.Count; i++)
             {
                 Tree tree = new Tree(menu_handler.menu_items[i]);
 
-                if (menu_handler.menu_items[i].parent_id == root.root.menu_order + 1)
+                if (menu_handler.menu_items[i].parent_id == root.root.id)
                 {
                     root.children.Add(tree);
                 }
 
-                else if (menu_handler.menu_items[i].parent_id == root.root.menu_order + 2)
+                else if (menu_handler.menu_items[i].parent_id == menu_handler.menu_items[i - 1].id)
                 {
-                    SetSubMenu(root.children.Last(), i - 1);
+                    int pos = SetSubMenu(root.children.Last(), i);
+                    i = pos - 1;
                     continue;
                 }
 
                 else break;
             }
+            return i;
         }
     }
 }

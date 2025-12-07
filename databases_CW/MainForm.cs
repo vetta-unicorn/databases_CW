@@ -22,6 +22,7 @@ namespace databases_CW
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
         private DB_Dicrectories directories = new DB_Dicrectories();
         private string currentTableName;
+        private Item currentTable;
         Records record;
         public MainForm()
         {
@@ -36,6 +37,8 @@ namespace databases_CW
 
             button2.Visible = false; button2.Enabled = false;
             button3.Visible = false; button3.Enabled = false;
+            button4.Visible = false; button4.Enabled = false;
+            button5.Visible = false; button5.Enabled = false;
         }
         public void SetStatus(ToolStripMenuItem menuitem, Tree tree)
         {
@@ -75,7 +78,7 @@ namespace databases_CW
                 {
                     printMethod = (message) =>
                     {
-                        MessageBox.Show($"You have calles method: {message}");
+                        MessageBox.Show($"You have called method: {message}");
                     };
                 }
 
@@ -110,8 +113,11 @@ namespace databases_CW
                     {
                         directories.ChooseTask(child.root, connectionString, dataGridViewReferences);
                         currentTableName = child.root.function_name;
+                        currentTable = child.root;
                         button3.Visible = true; button3.Enabled = true;
                         button2.Visible = true; button2.Enabled = true;
+                        button4.Visible = true; button4.Enabled = true;
+                        button5.Visible = true; button5.Enabled = true;
                     };
                 }
                 else
@@ -193,47 +199,71 @@ namespace databases_CW
         // Двойной клик для редактирования
         private void dataGridViewReferences_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            try
             {
-                var row = dataGridViewReferences.Rows[e.RowIndex];
-                int id = Convert.ToInt32(row.Cells["id"].Value);
-                string name = row.Cells["name"].Value.ToString();
-
-                var editForm = new AddEditForm(currentTableName, id, name);
-                if (editForm.ShowDialog() == DialogResult.OK)
+                if (e.RowIndex >= 0)
                 {
-                    var values = new Dictionary<string, object>
+                    var row = dataGridViewReferences.Rows[e.RowIndex];
+                    int id = Convert.ToInt32(row.Cells["id"].Value);
+                    string name = row.Cells["name"].Value.ToString();
+
+                    var editForm = new AddEditForm(currentTableName, id, name);
+                    if (editForm.ShowDialog() == DialogResult.OK)
+                    {
+                        var values = new Dictionary<string, object>
                 {
                     { "name", editForm.RecordName }
                 };
 
-                    if (record.UpdateRecord(currentTableName, connectionString, id, values))
-                    {
-                        directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
-                        MessageBox.Show("Запись успешно обновлена!", "Успех",
-                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (record.UpdateRecord(currentTableName, connectionString, id, values))
+                        {
+                            directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+                            MessageBox.Show("Запись успешно обновлена!", "Успех",
+                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Возникла ошибка: {ex}");
+            }
+
         }
 
         // фильтрация
         private void button4_Click(object sender, EventArgs e)
         {
-            // Создаем форму для ввода данных
-            var addForm = new AddEditForm(currentTableName, null);
-            if (addForm.ShowDialog() == DialogResult.OK)
+            using (var form = new AddEditForm(currentTableName, null, "", true))
             {
-                // Получаем данные из формы
-                var values = new Dictionary<string, object>
-            {
-                { "name", addForm.RecordName }
-            };
-
-                // Добавляем запись
-                record.FilterRecords(currentTableName, connectionString, values);
-
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    record.FilterRecords(currentTableName, connectionString, dataGridViewReferences, form.RecordName);
+                }
             }
+        }
+
+        // сброс фильтра
+        private void button5_Click(object sender, EventArgs e)
+        {
+            directories.ChooseTask(currentTable, connectionString, dataGridViewReferences);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewReferences.DataSource == null)
+            {
+                dataGridViewReferences.Rows.Clear();
+            }
+            else
+            {
+                dataGridViewReferences.DataSource = null;
+            }
+
+            button2.Visible = false; button2.Enabled = false;
+            button3.Visible = false; button3.Enabled = false;
+            button4.Visible = false; button4.Enabled = false;
+            button5.Visible = false; button5.Enabled = false;
         }
     }
 }
