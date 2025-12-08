@@ -41,13 +41,14 @@
             // 
             // button1
             // 
+            button1.BackColor = SystemColors.InactiveCaption;
             button1.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button1.Location = new Point(12, 378);
+            button1.Location = new Point(299, 378);
             button1.Name = "button1";
-            button1.Size = new Size(94, 29);
+            button1.Size = new Size(160, 29);
             button1.TabIndex = 0;
             button1.Text = "Выйти";
-            button1.UseVisualStyleBackColor = true;
+            button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
             // 
             // menuStrip1
@@ -71,7 +72,7 @@
             // button2
             // 
             button2.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button2.Location = new Point(132, 378);
+            button2.Location = new Point(105, 378);
             button2.Name = "button2";
             button2.Size = new Size(170, 29);
             button2.TabIndex = 3;
@@ -82,7 +83,7 @@
             // button3
             // 
             button3.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button3.Location = new Point(132, 424);
+            button3.Location = new Point(105, 424);
             button3.Name = "button3";
             button3.Size = new Size(170, 29);
             button3.TabIndex = 4;
@@ -93,7 +94,7 @@
             // button4
             // 
             button4.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button4.Location = new Point(320, 378);
+            button4.Location = new Point(483, 378);
             button4.Name = "button4";
             button4.Size = new Size(170, 29);
             button4.TabIndex = 5;
@@ -104,7 +105,7 @@
             // button5
             // 
             button5.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button5.Location = new Point(320, 424);
+            button5.Location = new Point(483, 424);
             button5.Name = "button5";
             button5.Size = new Size(170, 29);
             button5.TabIndex = 6;
@@ -114,13 +115,14 @@
             // 
             // button6
             // 
+            button6.BackColor = SystemColors.InactiveCaption;
             button6.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button6.Location = new Point(12, 424);
+            button6.Location = new Point(299, 424);
             button6.Name = "button6";
-            button6.Size = new Size(94, 29);
+            button6.Size = new Size(160, 29);
             button6.TabIndex = 7;
-            button6.Text = "Закрыть";
-            button6.UseVisualStyleBackColor = true;
+            button6.Text = "Закрыть таблицу";
+            button6.UseVisualStyleBackColor = false;
             button6.Click += button6_Click;
             // 
             // MainForm

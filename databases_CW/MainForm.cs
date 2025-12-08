@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using databases_CW.Menu;
 using Npgsql;
 using databases_CW.DB;
+using databases_CW.Instances;
 
 namespace databases_CW
 {
@@ -23,7 +24,10 @@ namespace databases_CW
         private DB_Dicrectories directories = new DB_Dicrectories();
         private string currentTableName;
         private Item currentTable;
+        private int currentTableStatus;
         Records record;
+        private string currUserPath = "User.json";
+        IGetLevel role;
         public MainForm()
         {
             InitializeComponent();
@@ -42,29 +46,25 @@ namespace databases_CW
         }
         public void SetStatus(ToolStripMenuItem menuitem, Tree tree)
         {
-            menuitem.Visible = true;
-            menuitem.Enabled = true;
-            //string jsonstring = file.readalltext(curruserpath);
-            //user curruser = jsonserializer.deserialize<user>(jsonstring);
-            //int status = authorize.getaccesslevel(tree.root.name, curruser);
-            //switch (status)
-            //{
-            //    case 0:
-            //        menuitem.visible = true;
-            //        menuitem.enabled = true;
-            //        break;
-            //    case 1:
-            //        menuitem.visible = true;
-            //        menuitem.enabled = false;
-            //        break;
-            //    case 2:
-            //        menuitem.visible = false;
-            //        menuitem.enabled = false;
-            //        break;
-            //    case -1:
-            //        messagebox.show("unable to set entry status!");
-            //        break;
-            //}
+            string jsonString = File.ReadAllText(currUserPath);
+            DB_User currUser = JsonSerializer.Deserialize<DB_User>(jsonString);
+            if (currUser.Role == "master") { role = new Master(); }
+            else if (currUser.Role == "admin") { role = new Admin(); }
+            else if (currUser.Role == "manager") { role = new Manager(); }
+            else if (currUser.Role == "commodity_expert") { role = new CommodityExpert(); }
+            else { role = new Accountant(); }
+            currentTableStatus = role.GetAccessLevel(tree.root.name);
+
+            if (currentTableStatus >= 0)
+            {
+                menuitem.Visible = true;
+                menuitem.Enabled = true;
+            }
+            else
+            {
+                menuitem.Visible = false;
+                menuitem.Enabled = false;
+            }
         }
 
         private void InitializeMenuStrip(List<Tree> trees)
@@ -92,45 +92,54 @@ namespace databases_CW
 
                 if (tree.children != null && tree.children.Count > 0)
                 {
-                    InitializeSubMenu(menuItem, tree.children);
+                    InitializeSubMenu(tree, menuItem, tree.children);
                 }
 
                 menuStrip1.Items.Add(menuItem);
             }
         }
 
-        private void InitializeSubMenu(ToolStripMenuItem parentMenuItem, List<Tree> children)
+        private void InitializeSubMenu(Tree root, ToolStripMenuItem parentMenuItem, List<Tree> children)
         {
             foreach (var child in children)
             {
                 ToolStripMenuItem childMenuItem = new ToolStripMenuItem(child.root.name);
 
-                // Убираем делегат PrintDelegate и используем прямое назначение события
                 if (child.children == null || child.children.Count() == 0)
                 {
-                    // Если это конечный пункт меню (таблица-справочник)
                     childMenuItem.Click += (sender, e) =>
                     {
                         directories.ChooseTask(child.root, connectionString, dataGridViewReferences);
                         currentTableName = child.root.function_name;
                         currentTable = child.root;
-                        button3.Visible = true; button3.Enabled = true;
-                        button2.Visible = true; button2.Enabled = true;
-                        button4.Visible = true; button4.Enabled = true;
-                        button5.Visible = true; button5.Enabled = true;
+                        currentTableStatus = role.GetAccessLevel(root.root.name);
+                        if (currentTableStatus >= 0) // SEL
+                        {
+                            button4.Visible = true; button4.Enabled = true;
+                            button5.Visible = true; button5.Enabled = true;
+                            button2.Visible = false; button2.Enabled = false;
+                            button3.Visible = false; button3.Enabled = false;
+                        }
+                        if (currentTableStatus >= 1) // INS
+                        {
+                            button2.Visible = true; button2.Enabled = true;
+                        }
+                        if (currentTableStatus == 2) // DEL
+                        {
+                            button3.Visible = true; button3.Enabled = true;
+                        }
                     };
                 }
                 else
                 {
-                    // Если есть подменю, оставляем пустым
                     childMenuItem.Click += (sender, e) => { };
                 }
 
-                SetStatus(childMenuItem, child);
+                SetStatus(childMenuItem, root);
 
                 if (child.children != null && child.children.Count > 0)
                 {
-                    InitializeSubMenu(childMenuItem, child.children);
+                    InitializeSubMenu(root, childMenuItem, child.children);
                 }
 
                 parentMenuItem.DropDownItems.Add(childMenuItem);
@@ -145,26 +154,165 @@ namespace databases_CW
             this.Hide();
         }
 
+        public Dictionary<string, List<string>> GetAllTablesColumns()
+        {
+            var result = new Dictionary<string, List<string>>();
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = @"
+            SELECT 
+                t.table_name,
+                c.column_name
+            FROM 
+                information_schema.tables t
+            JOIN 
+                information_schema.columns c ON t.table_name = c.table_name 
+                AND t.table_schema = c.table_schema
+            WHERE 
+                t.table_schema = 'public' 
+                AND t.table_type = 'BASE TABLE'
+            ORDER BY 
+                t.table_name, 
+                c.ordinal_position";
+
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        string currentTable = null;
+                        List<string> currentColumns = null;
+
+                        while (reader.Read())
+                        {
+                            string tableName = reader.GetString(0);
+                            string columnName = reader.GetString(1);
+
+                            if (currentTable != tableName)
+                            {
+                                if (currentTable != null)
+                                {
+                                    result[currentTable] = currentColumns;
+                                }
+
+                                currentTable = tableName;
+                                currentColumns = new List<string>();
+                            }
+
+                            currentColumns.Add(columnName);
+                        }
+
+                        if (currentTable != null)
+                        {
+                            result[currentTable] = currentColumns;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public List<string> GetTableColumns(string tableName)
+        {
+            var columns = new List<string>();
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    // Запрос для получения информации о колонках таблицы
+                    string query = @"
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name = @tableName 
+                AND table_schema = 'public'
+                ORDER BY ordinal_position";
+
+                    using (var command = new NpgsqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@tableName", tableName);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string columnName = reader.GetString(0);
+                                columns.Add(columnName);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при получении колонок таблицы '{tableName}': {ex.Message}",
+                              "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Возвращаем пустой список в случае ошибки
+            }
+
+            return columns;
+        }
+
         // добавить запись
         private void button2_Click(object sender, EventArgs e)
         {
-            // Создаем форму для ввода данных
-            var addForm = new AddEditForm(currentTableName, null);
+            Dictionary<string, List<string>> allTablesColumns = GetAllTablesColumns();
+
+            if (!allTablesColumns.ContainsKey(currentTableName))
+            {
+                MessageBox.Show($"Не удалось получить информацию о таблице '{currentTableName}'",
+                              "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            List<string> columns = allTablesColumns[currentTableName];
+
+            // фильтр всего кроме id
+            var editableColumns = columns
+                .Where(c => !c.Equals("id", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (editableColumns.Count == 0)
+            {
+                MessageBox.Show("В таблице нет редактируемых полей",
+                              "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var addForm = new AddNewRecordForm(currentTableName, editableColumns);
+
             if (addForm.ShowDialog() == DialogResult.OK)
             {
-                // Получаем данные из формы
-                var values = new Dictionary<string, object>
-            {
-                { "name", addForm.RecordName }
-            };
+                var values = new Dictionary<string, object>();
 
-                // Добавляем запись
+                foreach (var fieldValue in addForm.FieldValues)
+                {
+                    if (!string.IsNullOrWhiteSpace(fieldValue.Value))
+                    {
+                        values[fieldValue.Key] = fieldValue.Value;
+                    }
+                }
+
+                if (values.Count == 0)
+                {
+                    MessageBox.Show("Необходимо заполнить хотя бы одно поле",
+                                  "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 if (record.AddRecord(currentTableName, connectionString, values))
                 {
-                    // Обновляем DataGridView
                     directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
                     MessageBox.Show("Запись успешно добавлена!", "Успех",
                                   MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось добавить запись", "Ошибка",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -182,7 +330,6 @@ namespace databases_CW
                 {
                     if (record.DeleteRecord(currentTableName, connectionString, id))
                     {
-                        // Обновляем DataGridView
                         directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
                         MessageBox.Show("Запись успешно удалена!", "Успех",
                                       MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -199,46 +346,84 @@ namespace databases_CW
         // Двойной клик для редактирования
         private void dataGridViewReferences_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (currentTableStatus < 2)
+            {
+                MessageBox.Show("Недоступно редактирование полей");
+                return;
+            }
             try
             {
-                if (e.RowIndex >= 0)
-                {
-                    var row = dataGridViewReferences.Rows[e.RowIndex];
-                    int id = Convert.ToInt32(row.Cells["id"].Value);
-                    string name = row.Cells["name"].Value.ToString();
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                    return;
 
-                    var editForm = new AddEditForm(currentTableName, id, name);
-                    if (editForm.ShowDialog() == DialogResult.OK)
-                    {
-                        var values = new Dictionary<string, object>
+                var row = dataGridViewReferences.Rows[e.RowIndex];
+                var column = dataGridViewReferences.Columns[e.ColumnIndex];
+
+                int id = Convert.ToInt32(row.Cells["id"].Value);
+
+                string columnName = column.Name;
+
+                if (columnName.Equals("id", StringComparison.OrdinalIgnoreCase))
                 {
-                    { "name", editForm.RecordName }
+                    MessageBox.Show("Поле ID нельзя редактировать", "Информация",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                object cellValue = row.Cells[columnName].Value;
+                string currentValue = cellValue?.ToString() ?? string.Empty;
+
+                string formTitle = $"Редактирование '{columnName}' (ID: {id})";
+                var editForm = new AddEditForm(currentTableName, id, currentValue)
+                {
+                    Text = formTitle  
                 };
 
-                        if (record.UpdateRecord(currentTableName, connectionString, id, values))
-                        {
-                            directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
-                            MessageBox.Show("Запись успешно обновлена!", "Успех",
-                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
+                if (editForm.ShowDialog() == DialogResult.OK)
+                {
+                    var values = new Dictionary<string, object>
+            {
+                { columnName, editForm.RecordName } 
+            };
+
+                    if (record.UpdateRecord(currentTableName, connectionString, id, values))
+                    {
+                        directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+
+                        MessageBox.Show($"Поле '{columnName}' успешно обновлено!", "Успех",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удалось обновить запись", "Ошибка",
+                                      MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Возникла ошибка: {ex}");
+                MessageBox.Show($"Возникла ошибка: {ex.Message}", "Ошибка",
+                              MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
-        // фильтрация
+        //фильтрация
         private void button4_Click(object sender, EventArgs e)
         {
+            List<string> columns = GetTableColumns(currentTableName);
+
+            string currentColumn = "name";
+            if (dataGridViewReferences.SelectedCells.Count > 0)
+            {
+                int columnIndex = dataGridViewReferences.SelectedCells[0].ColumnIndex;
+                currentColumn = dataGridViewReferences.Columns[columnIndex].Name;
+            }
             using (var form = new AddEditForm(currentTableName, null, "", true))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    record.FilterRecords(currentTableName, connectionString, dataGridViewReferences, form.RecordName);
+                    record.FilterRecords(currentTableName, connectionString, dataGridViewReferences,
+                        form.RecordName, form.ColumnName);
                 }
             }
         }
@@ -249,6 +434,7 @@ namespace databases_CW
             directories.ChooseTask(currentTable, connectionString, dataGridViewReferences);
         }
 
+        // сброс DataGridView
         private void button6_Click(object sender, EventArgs e)
         {
             if (dataGridViewReferences.DataSource == null)

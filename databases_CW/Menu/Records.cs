@@ -80,7 +80,6 @@ namespace databases_CW.Menu
                 {
                     connection.Open();
 
-                    // Создаем SET часть запроса
                     var setClause = string.Join(", ", values.Keys.Select(k => $"{k} = @{k}"));
 
                     string query = $"UPDATE {tableName} SET {setClause} WHERE id = @id";
@@ -108,9 +107,67 @@ namespace databases_CW.Menu
         }
 
 
+        //public DataTable FilterRecords(string tableName, string connectionString,
+        //DataGridView dataGridView, string columnName, string searchText)
+        //{
+        //    try
+        //    {
+        //        using (var connection = new NpgsqlConnection(connectionString))
+        //        {
+        //            connection.Open();
+
+        //            // Проверяем существование столбца в таблице
+        //            string checkColumnQuery = $@"
+        //        SELECT EXISTS (
+        //            SELECT 1 
+        //            FROM information_schema.columns 
+        //            WHERE table_name = @tableName 
+        //            AND column_name = @columnName
+        //        )";
+
+        //            bool columnExists;
+        //            using (var checkCommand = new NpgsqlCommand(checkColumnQuery, connection))
+        //            {
+        //                checkCommand.Parameters.AddWithValue("@tableName", tableName);
+        //                checkCommand.Parameters.AddWithValue("@columnName", columnName);
+        //                columnExists = (bool)checkCommand.ExecuteScalar();
+        //            }
+
+        //            if (!columnExists)
+        //            {
+        //                // Если столбец не существует, используем стандартный столбец "name"
+        //                columnName = "name";
+        //            }
+
+        //            // Создаем запрос с учетом выбранного столбца
+        //            string query = $"SELECT * FROM {tableName} WHERE {columnName} LIKE @searchText ORDER BY id";
+
+        //            using (var command = new NpgsqlCommand(query, connection))
+        //            {
+        //                command.Parameters.AddWithValue("@searchText", $"%{searchText}%");
+
+        //                var dataTable = new DataTable();
+        //                using (var adapter = new NpgsqlDataAdapter(command))
+        //                {
+        //                    adapter.Fill(dataTable);
+        //                }
+
+        //                dataGridView.DataSource = dataTable;
+
+        //                return dataTable;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка фильтрации записей: {ex.Message}", "Ошибка",
+        //                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return null;
+        //    }
+        //}
 
         public DataTable FilterRecords(string tableName, string connectionString,
-    DataGridView dataGridView, string searchText)
+                DataGridView dataGridView, string searchText, string columnName)
         {
             try
             {
@@ -118,12 +175,10 @@ namespace databases_CW.Menu
                 {
                     connection.Open();
 
-                    // Используем LIKE для поиска по частичному совпадению
-                    string query = $"SELECT * FROM {tableName} WHERE name LIKE @searchText ORDER BY id";
+                    string query = $"SELECT * FROM {tableName} WHERE {columnName} LIKE @searchText ORDER BY id";
 
                     using (var command = new NpgsqlCommand(query, connection))
                     {
-                        // Добавляем % для поиска по части строки
                         command.Parameters.AddWithValue("@searchText", $"%{searchText}%");
 
                         var dataTable = new DataTable();
@@ -132,7 +187,6 @@ namespace databases_CW.Menu
                             adapter.Fill(dataTable);
                         }
 
-                        // Обновляем DataGridView
                         dataGridView.DataSource = dataTable;
 
                         return dataTable;

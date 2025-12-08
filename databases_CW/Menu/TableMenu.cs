@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,24 +22,24 @@ namespace databases_CW.Menu
         public void SetMenu()
         {
             int i;
-            for (i = 0; i < menu_handler.menu_items.Count; i++)
+            List<int> rootList = new List<int>() { 1, 10, 15, 22, 26, 29 };
+            for (i = 0; i < menu_handler.menu_items.Count - 1; i++)
             {
                 Tree tree = new Tree(menu_handler.menu_items[i]);
 
                 if (menu_handler.menu_items[i].parent_id == 0)
                 {
                     menu.Add(tree);
-
-                    if (menu_handler.menu_items[i + 1].parent_id == 1 || menu_handler.menu_items[i + 1].parent_id == 10
-                        || menu_handler.menu_items[i + 1].parent_id == 15 || menu_handler.menu_items[i + 1].parent_id == 22
-                        || menu_handler.menu_items[i + 1].parent_id == 26)
+                    if (rootList.Contains(menu_handler.menu_items[i + 1].parent_id))
                     {
                         int position = SetSubMenu(tree, i);
                         i = position - 1;
                     }
                 }
-
             }
+            i++;
+            Tree tree1 = new Tree(menu_handler.menu_items.Last());
+            if (menu_handler.menu_items.Last().parent_id == 0) { menu.Add(tree1); }
         }
 
         public int SetSubMenu(Tree root, int position)

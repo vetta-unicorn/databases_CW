@@ -14,6 +14,7 @@ namespace databases_CW
     public partial class AddEditForm : Form
     {
         public string RecordName;
+        public string ColumnName;
         private bool isEditMode;
         private bool idSearchMode;
         private string tableName;
@@ -32,11 +33,15 @@ namespace databases_CW
 
             else if (isEditMode)
             {
+                txtColumn.Visible = false;
+                label2.Visible = false;
                 this.Text = $"Редактирование {tableName}";
                 txtName.Text = currentName;
             }
             else
             {
+                txtColumn.Visible = false;
+                label2.Visible = false;
                 this.Text = $"Добавление {tableName}";
             }
         }
@@ -52,6 +57,7 @@ namespace databases_CW
             }
 
             RecordName = txtName.Text.Trim();
+            ColumnName = txtColumn.Text.Trim();
             DialogResult = DialogResult.OK;
             Close();
         }

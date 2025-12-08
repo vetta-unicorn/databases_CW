@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using databases_CW.Instances;
 using databases_CW.DB;
+using System.Text.Json;
 
 namespace databases_CW
 {
@@ -21,6 +22,8 @@ namespace databases_CW
         {
             string username = "default";
             string password = "default";
+            string fileCurrentUser = "User.json";
+
             try
             {
                 username = Convert.ToString(textBox1.Text);
@@ -35,6 +38,9 @@ namespace databases_CW
             DB_User user = service.AuthenticateUser(username, password);
             if (user != null)
             {
+                var jsonString = JsonSerializer.Serialize(user);
+                File.WriteAllText(fileCurrentUser, jsonString);
+
                 var Form2 = new MainForm();
                 Form2.Show();
                 this.Hide();
