@@ -36,16 +36,19 @@
             button4 = new Button();
             button5 = new Button();
             button6 = new Button();
+            txtSQL = new RichTextBox();
+            panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).BeginInit();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.BackColor = SystemColors.InactiveCaption;
-            button1.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button1.Location = new Point(299, 378);
+            button1.BackColor = Color.LightCyan;
+            button1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button1.Location = new Point(594, 598);
             button1.Name = "button1";
-            button1.Size = new Size(160, 29);
+            button1.Size = new Size(194, 37);
             button1.TabIndex = 0;
             button1.Text = "Выйти";
             button1.UseVisualStyleBackColor = false;
@@ -56,92 +59,117 @@
             menuStrip1.ImageScalingSize = new Size(20, 20);
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.Size = new Size(1415, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
             // dataGridViewReferences
             // 
+            dataGridViewReferences.BackgroundColor = SystemColors.ButtonHighlight;
             dataGridViewReferences.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewReferences.Location = new Point(12, 81);
+            dataGridViewReferences.Location = new Point(28, 41);
             dataGridViewReferences.Name = "dataGridViewReferences";
             dataGridViewReferences.RowHeadersWidth = 51;
-            dataGridViewReferences.Size = new Size(776, 275);
+            dataGridViewReferences.Size = new Size(1296, 459);
             dataGridViewReferences.TabIndex = 2;
             // 
             // button2
             // 
-            button2.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button2.Location = new Point(105, 378);
+            button2.BackColor = SystemColors.ButtonHighlight;
+            button2.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button2.Location = new Point(340, 547);
             button2.Name = "button2";
-            button2.Size = new Size(170, 29);
+            button2.Size = new Size(199, 37);
             button2.TabIndex = 3;
             button2.Text = "Добавить запись";
-            button2.UseVisualStyleBackColor = true;
+            button2.UseVisualStyleBackColor = false;
             button2.Click += button2_Click;
             // 
             // button3
             // 
-            button3.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button3.Location = new Point(105, 424);
+            button3.BackColor = SystemColors.ButtonHighlight;
+            button3.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button3.Location = new Point(340, 598);
             button3.Name = "button3";
-            button3.Size = new Size(170, 29);
+            button3.Size = new Size(199, 37);
             button3.TabIndex = 4;
             button3.Text = "Удалить запись";
-            button3.UseVisualStyleBackColor = true;
+            button3.UseVisualStyleBackColor = false;
             button3.Click += button3_Click;
             // 
             // button4
             // 
-            button4.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button4.Location = new Point(483, 378);
+            button4.BackColor = SystemColors.ButtonHighlight;
+            button4.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button4.Location = new Point(833, 547);
             button4.Name = "button4";
-            button4.Size = new Size(170, 29);
+            button4.Size = new Size(194, 37);
             button4.TabIndex = 5;
             button4.Text = "Фильтр";
-            button4.UseVisualStyleBackColor = true;
+            button4.UseVisualStyleBackColor = false;
             button4.Click += button4_Click;
             // 
             // button5
             // 
-            button5.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button5.Location = new Point(483, 424);
+            button5.BackColor = SystemColors.ButtonHighlight;
+            button5.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button5.Location = new Point(833, 598);
             button5.Name = "button5";
-            button5.Size = new Size(170, 29);
+            button5.Size = new Size(194, 37);
             button5.TabIndex = 6;
             button5.Text = "Сброс фильтра";
-            button5.UseVisualStyleBackColor = true;
+            button5.UseVisualStyleBackColor = false;
             button5.Click += button5_Click;
             // 
             // button6
             // 
-            button6.BackColor = SystemColors.InactiveCaption;
-            button6.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button6.Location = new Point(299, 424);
+            button6.BackColor = Color.LightCyan;
+            button6.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button6.Location = new Point(594, 547);
             button6.Name = "button6";
-            button6.Size = new Size(160, 29);
+            button6.Size = new Size(194, 37);
             button6.TabIndex = 7;
-            button6.Text = "Закрыть таблицу";
+            button6.Text = "Закрыть вкладку";
             button6.UseVisualStyleBackColor = false;
             button6.Click += button6_Click;
+            // 
+            // txtSQL
+            // 
+            txtSQL.Location = new Point(28, 41);
+            txtSQL.Name = "txtSQL";
+            txtSQL.Size = new Size(1296, 93);
+            txtSQL.TabIndex = 8;
+            txtSQL.Text = "";
+            // 
+            // panel1
+            // 
+            panel1.BackColor = Color.Silver;
+            panel1.Controls.Add(txtSQL);
+            panel1.Controls.Add(dataGridViewReferences);
+            panel1.Location = new Point(27, 27);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1355, 618);
+            panel1.TabIndex = 9;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 534);
+            BackColor = SystemColors.Control;
+            ClientSize = new Size(1415, 671);
             Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
-            Controls.Add(dataGridViewReferences);
             Controls.Add(button1);
             Controls.Add(menuStrip1);
+            Controls.Add(panel1);
             MainMenuStrip = menuStrip1;
             Name = "MainForm";
-            Text = "MainForm";
+            Text = "АИС Книжный магазин";
             ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).EndInit();
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -156,5 +184,8 @@
         private Button button4;
         private Button button5;
         private Button button6;
+        private RichTextBox richTextBox1;
+        private RichTextBox txtSQL;
+        private Panel panel1;
     }
 }

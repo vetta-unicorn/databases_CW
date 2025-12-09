@@ -14,6 +14,7 @@ using databases_CW.Menu;
 using Npgsql;
 using databases_CW.DB;
 using databases_CW.Instances;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace databases_CW
 {
@@ -28,23 +29,37 @@ namespace databases_CW
         Records record;
         private string currUserPath = "User.json";
         IGetLevel role;
+        GetColumns getColumns;
         public MainForm()
         {
             InitializeComponent();
             dataGridViewReferences.CellDoubleClick += dataGridViewReferences_CellDoubleClick;
+            SetUser();
             TableMenu table = new TableMenu();
             table.SetMenu();
             InitializeMenuStrip(table.menu);
-            menuStrip1.BackColor = Color.FromArgb(224, 255, 255);
-            menuStrip1.Font = new Font("STFangsong", 12f, FontStyle.Regular);
+            menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
+            menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
             record = new Records();
+            getColumns = new GetColumns(connectionString);
 
             button2.Visible = false; button2.Enabled = false;
             button3.Visible = false; button3.Enabled = false;
             button4.Visible = false; button4.Enabled = false;
             button5.Visible = false; button5.Enabled = false;
+
+            txtSQL.Visible = false;
         }
-        public void SetStatus(ToolStripMenuItem menuitem, Tree tree)
+
+        private void ShowTxtSQL()
+        {
+            dataGridViewReferences.Top = txtSQL.Bottom + 10;
+            dataGridViewReferences.Height -= 100;
+            txtSQL.Visible = true;
+            dataGridViewReferences.BackgroundColor = Color.FromArgb(255, 250, 240);
+        }
+
+        private void SetUser()
         {
             string jsonString = File.ReadAllText(currUserPath);
             DB_User currUser = JsonSerializer.Deserialize<DB_User>(jsonString);
@@ -52,7 +67,12 @@ namespace databases_CW
             else if (currUser.Role == "admin") { role = new Admin(); }
             else if (currUser.Role == "manager") { role = new Manager(); }
             else if (currUser.Role == "commodity_expert") { role = new CommodityExpert(); }
-            else { role = new Accountant(); }
+            else if (currUser.Role == "accountant") { role = new Accountant(); }
+            else { role = new Role(); }
+        }
+
+        public void SetStatus(ToolStripMenuItem menuitem, Tree tree)
+        {
             currentTableStatus = role.GetAccessLevel(tree.root.name);
 
             if (currentTableStatus >= 0)
@@ -117,16 +137,16 @@ namespace databases_CW
                         {
                             button4.Visible = true; button4.Enabled = true;
                             button5.Visible = true; button5.Enabled = true;
-                            button2.Visible = false; button2.Enabled = false;
-                            button3.Visible = false; button3.Enabled = false;
+                            button2.Visible = true; button2.Enabled = false;
+                            button3.Visible = true; button3.Enabled = false;
                         }
                         if (currentTableStatus >= 1) // INS
                         {
-                            button2.Visible = true; button2.Enabled = true;
+                            button2.Enabled = true;
                         }
                         if (currentTableStatus == 2) // DEL
                         {
-                            button3.Visible = true; button3.Enabled = true;
+                            button3.Enabled = true;
                         }
                     };
                 }
@@ -154,113 +174,10 @@ namespace databases_CW
             this.Hide();
         }
 
-        public Dictionary<string, List<string>> GetAllTablesColumns()
-        {
-            var result = new Dictionary<string, List<string>>();
-
-            using (var connection = new NpgsqlConnection(connectionString))
-            {
-                connection.Open();
-                string query = @"
-            SELECT 
-                t.table_name,
-                c.column_name
-            FROM 
-                information_schema.tables t
-            JOIN 
-                information_schema.columns c ON t.table_name = c.table_name 
-                AND t.table_schema = c.table_schema
-            WHERE 
-                t.table_schema = 'public' 
-                AND t.table_type = 'BASE TABLE'
-            ORDER BY 
-                t.table_name, 
-                c.ordinal_position";
-
-                using (var command = new NpgsqlCommand(query, connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        string currentTable = null;
-                        List<string> currentColumns = null;
-
-                        while (reader.Read())
-                        {
-                            string tableName = reader.GetString(0);
-                            string columnName = reader.GetString(1);
-
-                            if (currentTable != tableName)
-                            {
-                                if (currentTable != null)
-                                {
-                                    result[currentTable] = currentColumns;
-                                }
-
-                                currentTable = tableName;
-                                currentColumns = new List<string>();
-                            }
-
-                            currentColumns.Add(columnName);
-                        }
-
-                        if (currentTable != null)
-                        {
-                            result[currentTable] = currentColumns;
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        public List<string> GetTableColumns(string tableName)
-        {
-            var columns = new List<string>();
-
-            try
-            {
-                using (var connection = new NpgsqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    // Запрос для получения информации о колонках таблицы
-                    string query = @"
-                SELECT column_name 
-                FROM information_schema.columns 
-                WHERE table_name = @tableName 
-                AND table_schema = 'public'
-                ORDER BY ordinal_position";
-
-                    using (var command = new NpgsqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@tableName", tableName);
-
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                string columnName = reader.GetString(0);
-                                columns.Add(columnName);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при получении колонок таблицы '{tableName}': {ex.Message}",
-                              "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                // Возвращаем пустой список в случае ошибки
-            }
-
-            return columns;
-        }
-
         // добавить запись
         private void button2_Click(object sender, EventArgs e)
         {
-            Dictionary<string, List<string>> allTablesColumns = GetAllTablesColumns();
+            Dictionary<string, List<string>> allTablesColumns = getColumns.GetAllTablesColumns();
 
             if (!allTablesColumns.ContainsKey(currentTableName))
             {
@@ -376,14 +293,14 @@ namespace databases_CW
                 string formTitle = $"Редактирование '{columnName}' (ID: {id})";
                 var editForm = new AddEditForm(currentTableName, id, currentValue)
                 {
-                    Text = formTitle  
+                    Text = formTitle
                 };
 
                 if (editForm.ShowDialog() == DialogResult.OK)
                 {
                     var values = new Dictionary<string, object>
             {
-                { columnName, editForm.RecordName } 
+                { columnName, editForm.RecordName }
             };
 
                     if (record.UpdateRecord(currentTableName, connectionString, id, values))
@@ -410,7 +327,7 @@ namespace databases_CW
         //фильтрация
         private void button4_Click(object sender, EventArgs e)
         {
-            List<string> columns = GetTableColumns(currentTableName);
+            List<string> columns = getColumns.GetTableColumns(currentTableName);
 
             string currentColumn = "name";
             if (dataGridViewReferences.SelectedCells.Count > 0)
@@ -437,6 +354,7 @@ namespace databases_CW
         // сброс DataGridView
         private void button6_Click(object sender, EventArgs e)
         {
+            ShowTxtSQL();
             if (dataGridViewReferences.DataSource == null)
             {
                 dataGridViewReferences.Rows.Clear();
