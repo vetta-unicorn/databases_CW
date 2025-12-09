@@ -13,7 +13,6 @@ using System.Windows.Forms;
 using databases_CW.Menu;
 using Npgsql;
 using databases_CW.DB;
-using databases_CW.Instances;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace databases_CW
@@ -23,6 +22,7 @@ namespace databases_CW
         private delegate void PrintDelegate(string message);
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
         private DB_Dicrectories directories = new DB_Dicrectories();
+        private DB_User user;
         private string currentTableName;
         private Item currentTable;
         private int currentTableStatus;
@@ -34,7 +34,8 @@ namespace databases_CW
         {
             InitializeComponent();
             dataGridViewReferences.CellDoubleClick += dataGridViewReferences_CellDoubleClick;
-            SetUser();
+            user = new DB_User();
+            role = user.SetUser(currUserPath);
             TableMenu table = new TableMenu();
             table.SetMenu();
             InitializeMenuStrip(table.menu);
@@ -47,7 +48,6 @@ namespace databases_CW
             button3.Visible = false; button3.Enabled = false;
             button4.Visible = false; button4.Enabled = false;
             button5.Visible = false; button5.Enabled = false;
-
             txtSQL.Visible = false;
         }
 
@@ -57,18 +57,6 @@ namespace databases_CW
             dataGridViewReferences.Height -= 100;
             txtSQL.Visible = true;
             dataGridViewReferences.BackgroundColor = Color.FromArgb(255, 250, 240);
-        }
-
-        private void SetUser()
-        {
-            string jsonString = File.ReadAllText(currUserPath);
-            DB_User currUser = JsonSerializer.Deserialize<DB_User>(jsonString);
-            if (currUser.Role == "master") { role = new Master(); }
-            else if (currUser.Role == "admin") { role = new Admin(); }
-            else if (currUser.Role == "manager") { role = new Manager(); }
-            else if (currUser.Role == "commodity_expert") { role = new CommodityExpert(); }
-            else if (currUser.Role == "accountant") { role = new Accountant(); }
-            else { role = new Role(); }
         }
 
         public void SetStatus(ToolStripMenuItem menuitem, Tree tree)

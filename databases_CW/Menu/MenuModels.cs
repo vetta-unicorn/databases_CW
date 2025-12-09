@@ -22,6 +22,12 @@ namespace databases_CW.Menu
             this.menu_order = menu_order;
         }
 
+        public Item(int parent_id, string name)
+        {
+            this.parent_id = parent_id;
+            this.name = name;
+        }
+
         public Item() { }
     }
 

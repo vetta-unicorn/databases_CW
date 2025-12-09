@@ -1,11 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace databases_CW.DB
 {
+    public class DB_User
+    {
+        public string Login { get; set; }
+        public string Password { get; set; }
+        public string HashPassword { get; set; }
+        public string Role { get; set; }
+
+        public DB_User()
+        {
+            Login = "default";
+            Password = "default";
+            HashPassword = "default";
+            Role = "default";
+        }
+        public IGetLevel SetUser(string currUserPath)
+        {
+            string jsonString = File.ReadAllText(currUserPath);
+            DB_User currUser = JsonSerializer.Deserialize<DB_User>(jsonString);
+            if (currUser != null)
+            {
+                if (currUser.Role == "master") { return new Master(); }
+                else if (currUser.Role == "admin") { return new Admin(); }
+                else if (currUser.Role == "manager") { return new Manager(); }
+                else if (currUser.Role == "commodity_expert") { return new CommodityExpert(); }
+                else if (currUser.Role == "accountant") { return new Accountant(); }
+                else { return new Role(); }
+            }
+            else
+            {
+                return new Role();
+            }
+        }
+    }
+
     public interface IGetLevel
     {
         int GetAccessLevel(string tableName);
