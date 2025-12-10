@@ -30,6 +30,7 @@ namespace databases_CW
         private string currUserPath = "User.json";
         IGetLevel role;
         GetColumns getColumns;
+        Documents docs;
         public MainForm()
         {
             InitializeComponent();
@@ -38,6 +39,8 @@ namespace databases_CW
             role = user.SetUser(currUserPath);
             TableMenu table = new TableMenu();
             table.SetMenu();
+            docs = new Documents();
+            docs.InsertIntoTableMenu(table.menu);
             InitializeMenuStrip(table.menu);
             menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);

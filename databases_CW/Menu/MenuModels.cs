@@ -22,10 +22,10 @@ namespace databases_CW.Menu
             this.menu_order = menu_order;
         }
 
-        public Item(int parent_id, string name)
+        public Item(string name, string function_name)
         {
-            this.parent_id = parent_id;
             this.name = name;
+            this.function_name = function_name;
         }
 
         public Item() { }

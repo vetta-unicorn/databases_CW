@@ -1,5 +1,4 @@
-﻿using databases_CW.Instances;
-using Npgsql;
+﻿using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
