@@ -1,4 +1,5 @@
 ﻿using databases_CW.DB;
+using databases_CW.Menu;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace databases_CW.Menu
+namespace databases_CW.DB_Write
 {
     public class ProcessMenu
     {

@@ -15,6 +15,9 @@ using Npgsql;
 using databases_CW.DB;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
+using databases_CW.DB_Write;
+using databases_CW.DB_Read;
+using databases_CW.DB_Models;
 
 namespace databases_CW
 {
@@ -32,6 +35,7 @@ namespace databases_CW
         IGetLevel role;
         GetColumns getColumns;
         Documents docs;
+        DocSelect docSelect;
         public MainForm()
         {
             InitializeComponent();
@@ -48,6 +52,7 @@ namespace databases_CW
             txtSQL.Font = new Font(txtSQL.Font.FontFamily, 13f);
             record = new Records();
             getColumns = new GetColumns(connectionString);
+            docSelect = new DocSelect(connectionString);
 
             button2.Visible = false; button2.Enabled = false;
             button3.Visible = false; button3.Enabled = false;
@@ -59,10 +64,8 @@ namespace databases_CW
             txtSQL.Visible = false;
         }
 
-        // Спрятать первую кнопку и показать новую на её месте
         private void SwapButtons(System.Windows.Forms.Button buttonToHide, System.Windows.Forms.Button buttonToShow)
         {
-            // Получаем родительский контейнер кнопки, которую прячем
             Control parent = buttonToHide.Parent;
 
             buttonToShow.Location = buttonToHide.Location;
@@ -71,18 +74,14 @@ namespace databases_CW
 
             buttonToHide.Visible = false;
 
-            // Проверяем, в том же ли контейнере находится новая кнопка
             if (buttonToShow.Parent != parent)
             {
-                // Если нет - добавляем в тот же контейнер
                 if (buttonToShow.Parent != null)
                 {
                     buttonToShow.Parent.Controls.Remove(buttonToShow);
                 }
                 parent.Controls.Add(buttonToShow);
             }
-
-            // Перемещаем на передний план
             buttonToShow.BringToFront();
         }
 
@@ -90,8 +89,11 @@ namespace databases_CW
         {
             if (txtSQL.Visible == false)
             {
-                dataGridViewReferences.Top = txtSQL.Bottom + 10;
-                dataGridViewReferences.Height -= 100;
+                if (dataGridViewReferences.Top != txtSQL.Bottom + 10)
+                {
+                    dataGridViewReferences.Top = txtSQL.Bottom + 10;
+                    dataGridViewReferences.Height -= 100;
+                }
                 txtSQL.Visible = true;
                 dataGridViewReferences.BackgroundColor = Color.FromArgb(255, 250, 240);
             }
@@ -161,6 +163,8 @@ namespace databases_CW
                 {
                     childMenuItem.Click += (sender, e) =>
                     {
+                        ClearGaraGridView();
+                        txtSQL.Visible = false;
                         if (root.root.name == "Документы")
                         {
                             txtSQL.Text = child.root.function_name;
@@ -169,15 +173,15 @@ namespace databases_CW
                             SwapButtons(button3, button8);
                             button7.Visible = true; button7.Enabled = true;
                             button8.Visible = true; button8.Enabled = true;
-                            button4.Visible = true; button4.Enabled = true;
-                            button5.Visible = true; button5.Enabled = true;
+                            button4.Visible = true; button4.Enabled = false; // пока что false
+                            button5.Visible = true; button5.Enabled = false;
                         }
                         else
                         {
                             button7.Visible = false; button7.Enabled = false;
                             button8.Visible = false; button8.Enabled = false;
 
-                            directories.ChooseTask(child.root, connectionString, dataGridViewReferences);
+                            directories.LoadTableData(child.root.function_name, connectionString, dataGridViewReferences);
                             currentTableName = child.root.function_name;
                             currentTable = child.root;
                             currentTableStatus = role.GetAccessLevel(root.root.name);
@@ -397,11 +401,11 @@ namespace databases_CW
         // сброс фильтра
         private void button5_Click(object sender, EventArgs e)
         {
-            directories.ChooseTask(currentTable, connectionString, dataGridViewReferences);
+            directories.LoadTableData(currentTable.function_name, connectionString, dataGridViewReferences);
         }
-
-        // сброс DataGridView - закрыть вкладку
-        private void button6_Click(object sender, EventArgs e)
+        
+        // очистить панель
+        private void ClearGaraGridView()
         {
             if (dataGridViewReferences.DataSource == null)
             {
@@ -411,7 +415,12 @@ namespace databases_CW
             {
                 dataGridViewReferences.DataSource = null;
             }
+        }
 
+        // сброс DataGridView - закрыть вкладку
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ClearGaraGridView();
             button2.Visible = false; button2.Enabled = false;
             button3.Visible = false; button3.Enabled = false;
             button4.Visible = false; button4.Enabled = false;
@@ -428,13 +437,17 @@ namespace databases_CW
         // Выполнить запрос
         private void button7_Click(object sender, EventArgs e)
         {
-
+            docSelect.DoSelect(dataGridViewReferences, txtSQL.Text);
         }
 
         // скачать файл
         private void button8_Click(object sender, EventArgs e)
         {
-
+            var downloadForm = new DownloadFileForm(dataGridViewReferences);
+            if (downloadForm.ShowDialog() == DialogResult.OK)
+            {
+                downloadForm.SaveDataToFile();
+            }
         }
     }
 }

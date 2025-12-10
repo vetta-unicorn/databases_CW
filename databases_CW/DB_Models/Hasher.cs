@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace databases_CW.DB
+namespace databases_CW.DB_Models
 {
     public static class Pbkdf2Hasher
     {

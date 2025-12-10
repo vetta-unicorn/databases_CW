@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
-namespace databases_CW.Menu
+namespace databases_CW.DB_Write
 {
     public class Records
     {

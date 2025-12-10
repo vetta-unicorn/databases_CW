@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace databases_CW.Menu
+namespace databases_CW.DB_Read
 {
     public class GetColumns
     {

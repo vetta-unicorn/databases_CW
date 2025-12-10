@@ -36,7 +36,20 @@ namespace databases_CW.Menu
 
                 { "Заказы за последний месяц", 
                     "SELECT * FROM orders " +
-                    "\r\nWHERE order_date > CURRENT_DATE - INTERVAL '30 days';"}
+                    "\r\nWHERE order_date > CURRENT_DATE - INTERVAL '30 days';"},
+
+                {"Рабочий стаж сотрудников",
+                    "SELECT * FROM \r\nemployees \r\nORDER BY seniority DESC;"},
+
+                {"Книги с категоризацией цены",
+                    "SELECT \r\n\tb.title, b.copyrightdate, b.pages, b.theme, " +
+                    "\r\n\tCASE \r\n\t\tWHEN i.price < 300 THEN 'эконом'" +
+                    "\r\n\t\tWHEN i.price BETWEEN 300 and 800 THEN 'стандарт'" +
+                    "\r\n\t\tWHEN i.price > 800 THEN 'премиум'\r\n\tEND AS category," +
+                    "\r\n\ti.price\r\nFROM items i\r\n" +
+                    "LEFT JOIN books b ON b.id = i.book_id\r\n"},
+
+                {"Новый запрос", "" }
             };
             docs_children = new List<Tree>();
             MakeDocsChildren();

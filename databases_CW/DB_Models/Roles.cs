@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace databases_CW.DB
+namespace databases_CW.DB_Models
 {
     public class DB_User
     {
@@ -78,10 +78,10 @@ namespace databases_CW.DB
     {
         public Admin()
         {
-            base.Access.Add("Книги", 2);
-            base.Access.Add("Заказы", 2);
-            base.Access.Add("Поставки", 2);
-            base.Access.Add("Отдел кадров", 2);
+            Access.Add("Книги", 2);
+            Access.Add("Заказы", 2);
+            Access.Add("Поставки", 2);
+            Access.Add("Отдел кадров", 2);
         }
     }
 
@@ -90,10 +90,10 @@ namespace databases_CW.DB
     {
         public Master()
         {
-            base.Access.Add("Книги", 2);
-            base.Access.Add("Заказы", 2);
-            base.Access.Add("Поставки", 2);
-            base.Access.Add("Отдел кадров", 2);
+            Access.Add("Книги", 2);
+            Access.Add("Заказы", 2);
+            Access.Add("Поставки", 2);
+            Access.Add("Отдел кадров", 2);
         }
     }
 
@@ -102,8 +102,8 @@ namespace databases_CW.DB
     {
         public Manager()
         {
-            base.Access.Add("Книги", 1);
-            base.Access.Add("Заказы", 2);
+            Access.Add("Книги", 1);
+            Access.Add("Заказы", 2);
         }
     }
 
@@ -112,8 +112,8 @@ namespace databases_CW.DB
     {
         public CommodityExpert()
         {
-            base.Access.Add("Книги", 2);
-            base.Access.Add("Поставки", 2);
+            Access.Add("Книги", 2);
+            Access.Add("Поставки", 2);
         }
     }
 
@@ -122,10 +122,10 @@ namespace databases_CW.DB
     {
         public Accountant()
         {
-            base.Access.Add("Книги", 0);
-            base.Access.Add("Заказы", 0);
-            base.Access.Add("Поставки", 0);
-            base.Access.Add("Отдел кадров", 2);
+            Access.Add("Книги", 0);
+            Access.Add("Заказы", 0);
+            Access.Add("Поставки", 0);
+            Access.Add("Отдел кадров", 2);
         }
     }
 

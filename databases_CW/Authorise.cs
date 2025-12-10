@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using databases_CW.DB;
 using System.Text.Json;
+using databases_CW.DB_Models;
 
 namespace databases_CW
 {
