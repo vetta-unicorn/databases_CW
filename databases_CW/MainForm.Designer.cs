@@ -38,6 +38,8 @@
             button6 = new Button();
             txtSQL = new RichTextBox();
             panel1 = new Panel();
+            button8 = new Button();
+            button7 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -144,12 +146,38 @@
             // panel1
             // 
             panel1.BackColor = Color.Silver;
+            panel1.Controls.Add(button8);
+            panel1.Controls.Add(button7);
             panel1.Controls.Add(txtSQL);
             panel1.Controls.Add(dataGridViewReferences);
             panel1.Location = new Point(27, 27);
             panel1.Name = "panel1";
             panel1.Size = new Size(1355, 618);
             panel1.TabIndex = 9;
+            // 
+            // button8
+            // 
+            button8.BackColor = SystemColors.ButtonHighlight;
+            button8.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button8.Location = new Point(1028, 571);
+            button8.Name = "button8";
+            button8.Size = new Size(209, 37);
+            button8.TabIndex = 10;
+            button8.Text = "Скачать файл";
+            button8.UseVisualStyleBackColor = false;
+            button8.Click += button8_Click;
+            // 
+            // button7
+            // 
+            button7.BackColor = SystemColors.ButtonHighlight;
+            button7.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button7.Location = new Point(1028, 520);
+            button7.Name = "button7";
+            button7.Size = new Size(209, 37);
+            button7.TabIndex = 9;
+            button7.Text = "Выполнить запрос";
+            button7.UseVisualStyleBackColor = false;
+            button7.Click += button7_Click;
             // 
             // MainForm
             // 
@@ -187,5 +215,7 @@
         private RichTextBox richTextBox1;
         private RichTextBox txtSQL;
         private Panel panel1;
+        private Button button8;
+        private Button button7;
     }
 }

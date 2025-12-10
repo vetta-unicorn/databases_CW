@@ -34,7 +34,7 @@ namespace databases_CW.Menu
                     "ORDER BY AVG(i.price) DESC\r\n    " +
                     "OFFSET 0 LIMIT 3\r\n) AS top_three\r\nORDER BY avg ASC;"},
 
-                { "Заказы за последнюю неделю", 
+                { "Заказы за последний месяц", 
                     "SELECT * FROM orders " +
                     "\r\nWHERE order_date > CURRENT_DATE - INTERVAL '30 days';"}
             };

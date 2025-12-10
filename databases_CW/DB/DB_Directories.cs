@@ -13,7 +13,7 @@ namespace databases_CW.DB
     {
         public void ChooseTask(Item item, string connectionString, DataGridView dataGridViewReferences)
         {
-            // Справочники
+            // справочники
             LoadTableData(item.function_name, connectionString, dataGridViewReferences);
         }
 

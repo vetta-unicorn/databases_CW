@@ -14,6 +14,7 @@ using databases_CW.Menu;
 using Npgsql;
 using databases_CW.DB;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 
 namespace databases_CW
 {
@@ -44,6 +45,7 @@ namespace databases_CW
             InitializeMenuStrip(table.menu);
             menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
+            txtSQL.Font = new Font(txtSQL.Font.FontFamily, 13f);
             record = new Records();
             getColumns = new GetColumns(connectionString);
 
@@ -51,15 +53,54 @@ namespace databases_CW
             button3.Visible = false; button3.Enabled = false;
             button4.Visible = false; button4.Enabled = false;
             button5.Visible = false; button5.Enabled = false;
+            button7.Visible = false; button7.Enabled = false;
+            button8.Visible = false; button8.Enabled = false;
+
             txtSQL.Visible = false;
+        }
+
+        // Спрятать первую кнопку и показать новую на её месте
+        private void SwapButtons(System.Windows.Forms.Button buttonToHide, System.Windows.Forms.Button buttonToShow)
+        {
+            // Получаем родительский контейнер кнопки, которую прячем
+            Control parent = buttonToHide.Parent;
+
+            buttonToShow.Location = buttonToHide.Location;
+            buttonToShow.Size = buttonToHide.Size;
+            buttonToShow.Visible = true;
+
+            buttonToHide.Visible = false;
+
+            // Проверяем, в том же ли контейнере находится новая кнопка
+            if (buttonToShow.Parent != parent)
+            {
+                // Если нет - добавляем в тот же контейнер
+                if (buttonToShow.Parent != null)
+                {
+                    buttonToShow.Parent.Controls.Remove(buttonToShow);
+                }
+                parent.Controls.Add(buttonToShow);
+            }
+
+            // Перемещаем на передний план
+            buttonToShow.BringToFront();
         }
 
         private void ShowTxtSQL()
         {
-            dataGridViewReferences.Top = txtSQL.Bottom + 10;
-            dataGridViewReferences.Height -= 100;
-            txtSQL.Visible = true;
-            dataGridViewReferences.BackgroundColor = Color.FromArgb(255, 250, 240);
+            if (txtSQL.Visible == false)
+            {
+                dataGridViewReferences.Top = txtSQL.Bottom + 10;
+                dataGridViewReferences.Height -= 100;
+                txtSQL.Visible = true;
+                dataGridViewReferences.BackgroundColor = Color.FromArgb(255, 250, 240);
+            }
+            else
+            {
+                dataGridViewReferences.Top = txtSQL.Top;
+                dataGridViewReferences.Height += 100;
+                txtSQL.Visible = false;
+            }
         }
 
         public void SetStatus(ToolStripMenuItem menuitem, Tree tree)
@@ -120,24 +161,41 @@ namespace databases_CW
                 {
                     childMenuItem.Click += (sender, e) =>
                     {
-                        directories.ChooseTask(child.root, connectionString, dataGridViewReferences);
-                        currentTableName = child.root.function_name;
-                        currentTable = child.root;
-                        currentTableStatus = role.GetAccessLevel(root.root.name);
-                        if (currentTableStatus >= 0) // SEL
+                        if (root.root.name == "Документы")
                         {
+                            txtSQL.Text = child.root.function_name;
+                            ShowTxtSQL();
+                            SwapButtons(button2, button7);
+                            SwapButtons(button3, button8);
+                            button7.Visible = true; button7.Enabled = true;
+                            button8.Visible = true; button8.Enabled = true;
                             button4.Visible = true; button4.Enabled = true;
                             button5.Visible = true; button5.Enabled = true;
-                            button2.Visible = true; button2.Enabled = false;
-                            button3.Visible = true; button3.Enabled = false;
                         }
-                        if (currentTableStatus >= 1) // INS
+                        else
                         {
-                            button2.Enabled = true;
-                        }
-                        if (currentTableStatus == 2) // DEL
-                        {
-                            button3.Enabled = true;
+                            button7.Visible = false; button7.Enabled = false;
+                            button8.Visible = false; button8.Enabled = false;
+
+                            directories.ChooseTask(child.root, connectionString, dataGridViewReferences);
+                            currentTableName = child.root.function_name;
+                            currentTable = child.root;
+                            currentTableStatus = role.GetAccessLevel(root.root.name);
+                            if (currentTableStatus >= 0) // SEL
+                            {
+                                button4.Visible = true; button4.Enabled = true;
+                                button5.Visible = true; button5.Enabled = true;
+                                button2.Visible = true; button2.Enabled = false;
+                                button3.Visible = true; button3.Enabled = false;
+                            }
+                            if (currentTableStatus >= 1) // INS
+                            {
+                                button2.Enabled = true;
+                            }
+                            if (currentTableStatus == 2) // DEL
+                            {
+                                button3.Enabled = true;
+                            }
                         }
                     };
                 }
@@ -342,10 +400,9 @@ namespace databases_CW
             directories.ChooseTask(currentTable, connectionString, dataGridViewReferences);
         }
 
-        // сброс DataGridView
+        // сброс DataGridView - закрыть вкладку
         private void button6_Click(object sender, EventArgs e)
         {
-            ShowTxtSQL();
             if (dataGridViewReferences.DataSource == null)
             {
                 dataGridViewReferences.Rows.Clear();
@@ -359,6 +416,25 @@ namespace databases_CW
             button3.Visible = false; button3.Enabled = false;
             button4.Visible = false; button4.Enabled = false;
             button5.Visible = false; button5.Enabled = false;
+            button7.Visible = false; button7.Enabled = false;
+            button8.Visible = false; button8.Enabled = false;
+
+            if (txtSQL.Visible == true)
+            {
+                ShowTxtSQL();
+            }
+        }
+
+        // Выполнить запрос
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // скачать файл
+        private void button8_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
