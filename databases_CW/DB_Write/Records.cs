@@ -11,6 +11,40 @@ namespace databases_CW.DB_Write
 {
     public class Records
     {
+        //public bool AddRecord(string tableName, string connectionString, Dictionary<string, object> values)
+        //{
+        //    try
+        //    {
+        //        using (var connection = new NpgsqlConnection(connectionString))
+        //        {
+        //            connection.Open();
+
+        //            // Создаем параметризованный запрос
+        //            var columns = string.Join(", ", values.Keys);
+        //            var parameters = string.Join(", ", values.Keys.Select(k => "@" + k));
+
+        //            string query = $"INSERT INTO {tableName} ({columns}) VALUES ({parameters}) RETURNING id";
+
+        //            using (var command = new NpgsqlCommand(query, connection))
+        //            {
+        //                foreach (var kvp in values)
+        //                {
+        //                    command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
+        //                }
+
+        //                var newId = command.ExecuteScalar();
+        //                return newId != null;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка добавления записи: {ex.Message}", "Ошибка",
+        //                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return false;
+        //    }
+        //}
+
         public bool AddRecord(string tableName, string connectionString, Dictionary<string, object> values)
         {
             try
@@ -19,7 +53,6 @@ namespace databases_CW.DB_Write
                 {
                     connection.Open();
 
-                    // Создаем параметризованный запрос
                     var columns = string.Join(", ", values.Keys);
                     var parameters = string.Join(", ", values.Keys.Select(k => "@" + k));
 
@@ -29,13 +62,23 @@ namespace databases_CW.DB_Write
                     {
                         foreach (var kvp in values)
                         {
-                            command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
+                            // Убедимся, что пустые строки преобразуются в DBNull для nullable полей
+                            if (kvp.Value == null || (kvp.Value is string str && string.IsNullOrWhiteSpace(str)))
+                                command.Parameters.AddWithValue("@" + kvp.Key, DBNull.Value);
+                            else
+                                command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value);
                         }
 
                         var newId = command.ExecuteScalar();
                         return newId != null;
                     }
                 }
+            }
+            catch (PostgresException ex)
+            {
+                MessageBox.Show($"Ошибка PostgreSQL при добавлении записи: {ex.Message}\nКод ошибки: {ex.SqlState}",
+                               "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
             catch (Exception ex)
             {

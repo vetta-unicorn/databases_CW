@@ -25,6 +25,8 @@ namespace databases_CW
     {
         private delegate void PrintDelegate(string message);
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
+       
+
         private DB_Dicrectories directories = new DB_Dicrectories();
         private DB_User user;
         private string currentTableName;
@@ -36,6 +38,7 @@ namespace databases_CW
         GetColumns getColumns;
         Documents docs;
         DocSelect docSelect;
+        int defaultHeight;
         public MainForm()
         {
             InitializeComponent();
@@ -49,10 +52,12 @@ namespace databases_CW
             InitializeMenuStrip(table.menu);
             menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
+            txtSQL.Visible = false;
             txtSQL.Font = new Font(txtSQL.Font.FontFamily, 13f);
             record = new Records();
             getColumns = new GetColumns(connectionString);
             docSelect = new DocSelect(connectionString);
+            defaultHeight = dataGridViewReferences.Height;
 
             button2.Visible = false; button2.Enabled = false;
             button3.Visible = false; button3.Enabled = false;
@@ -85,22 +90,18 @@ namespace databases_CW
             buttonToShow.BringToFront();
         }
 
-        private void ShowTxtSQL()
+        private void ShowTxtSQL(bool Flag) // true - открыть txtSQL, false - закрыть txtSQL
         {
-            if (txtSQL.Visible == false)
+            if (Flag)
             {
-                if (dataGridViewReferences.Top != txtSQL.Bottom + 10)
-                {
-                    dataGridViewReferences.Top = txtSQL.Bottom + 10;
-                    dataGridViewReferences.Height -= 100;
-                }
+                dataGridViewReferences.Top = txtSQL.Bottom + 10;
+                dataGridViewReferences.Height = defaultHeight - 100;
                 txtSQL.Visible = true;
-                dataGridViewReferences.BackgroundColor = Color.FromArgb(255, 250, 240);
             }
             else
             {
                 dataGridViewReferences.Top = txtSQL.Top;
-                dataGridViewReferences.Height += 100;
+                dataGridViewReferences.Height = defaultHeight;
                 txtSQL.Visible = false;
             }
         }
@@ -164,11 +165,10 @@ namespace databases_CW
                     childMenuItem.Click += (sender, e) =>
                     {
                         ClearGaraGridView();
-                        txtSQL.Visible = false;
                         if (root.root.name == "Документы")
                         {
                             txtSQL.Text = child.root.function_name;
-                            ShowTxtSQL();
+                            ShowTxtSQL(true);
                             SwapButtons(button2, button7);
                             SwapButtons(button3, button8);
                             button7.Visible = true; button7.Enabled = true;
@@ -178,10 +178,13 @@ namespace databases_CW
                         }
                         else
                         {
+                            ShowTxtSQL(false);
                             button7.Visible = false; button7.Enabled = false;
                             button8.Visible = false; button8.Enabled = false;
 
-                            directories.LoadTableData(child.root.function_name, connectionString, dataGridViewReferences);
+                            //directories.LoadTableData(child.root.function_name, connectionString, dataGridViewReferences);
+                            directories.LoadAndReplaceForeignKeys(child.root.function_name,
+                                connectionString, dataGridViewReferences);
                             currentTableName = child.root.function_name;
                             currentTable = child.root;
                             currentTableStatus = role.GetAccessLevel(root.root.name);
@@ -230,19 +233,12 @@ namespace databases_CW
         // добавить запись
         private void button2_Click(object sender, EventArgs e)
         {
-            Dictionary<string, List<string>> allTablesColumns = getColumns.GetAllTablesColumns();
+            var metadataService = new DatabaseMetadataService(connectionString);
+            var columnsMetadata = metadataService.GetTableColumns(currentTableName);
 
-            if (!allTablesColumns.ContainsKey(currentTableName))
-            {
-                MessageBox.Show($"Не удалось получить информацию о таблице '{currentTableName}'",
-                              "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            List<string> columns = allTablesColumns[currentTableName];
-
-            // фильтр всего кроме id
-            var editableColumns = columns
-                .Where(c => !c.Equals("id", StringComparison.OrdinalIgnoreCase))
+            // Фильтруем колонки (исключаем id и другие системные)
+            var editableColumns = columnsMetadata
+                .Where(c => !c.ColumnName.Equals("id", StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             if (editableColumns.Count == 0)
@@ -252,7 +248,7 @@ namespace databases_CW
                 return;
             }
 
-            var addForm = new AddNewRecordForm(currentTableName, editableColumns);
+            var addForm = new AddNewRecordForm(currentTableName, editableColumns, connectionString);
 
             if (addForm.ShowDialog() == DialogResult.OK)
             {
@@ -260,7 +256,9 @@ namespace databases_CW
 
                 foreach (var fieldValue in addForm.FieldValues)
                 {
-                    if (!string.IsNullOrWhiteSpace(fieldValue.Value))
+                    if (fieldValue.Value != null &&
+                        !(fieldValue.Value is DBNull) &&
+                        !string.IsNullOrWhiteSpace(fieldValue.Value.ToString()))
                     {
                         values[fieldValue.Key] = fieldValue.Value;
                     }
@@ -285,6 +283,61 @@ namespace databases_CW
                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            //Dictionary<string, List<string>> allTablesColumns = getColumns.GetAllTablesColumns();
+
+            //if (!allTablesColumns.ContainsKey(currentTableName))
+            //{
+            //    MessageBox.Show($"Не удалось получить информацию о таблице '{currentTableName}'",
+            //                  "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+            //List<string> columns = allTablesColumns[currentTableName];
+
+            //// фильтр всего кроме id
+            //var editableColumns = columns
+            //    .Where(c => !c.Equals("id", StringComparison.OrdinalIgnoreCase))
+            //    .ToList();
+
+            //if (editableColumns.Count == 0)
+            //{
+            //    MessageBox.Show("В таблице нет редактируемых полей",
+            //                  "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    return;
+            //}
+
+            //var addForm = new AddNewRecordForm(currentTableName, editableColumns);
+
+            //if (addForm.ShowDialog() == DialogResult.OK)
+            //{
+            //    var values = new Dictionary<string, object>();
+
+            //    foreach (var fieldValue in addForm.FieldValues)
+            //    {
+            //        if (!string.IsNullOrWhiteSpace(fieldValue.Value))
+            //        {
+            //            values[fieldValue.Key] = fieldValue.Value;
+            //        }
+            //    }
+
+            //    if (values.Count == 0)
+            //    {
+            //        MessageBox.Show("Необходимо заполнить хотя бы одно поле",
+            //                      "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //        return;
+            //    }
+
+            //    if (record.AddRecord(currentTableName, connectionString, values))
+            //    {
+            //        directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+            //        MessageBox.Show("Запись успешно добавлена!", "Успех",
+            //                      MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Не удалось добавить запись", "Ошибка",
+            //                      MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    }
+            //}
         }
 
         // удалить запись
@@ -430,7 +483,7 @@ namespace databases_CW
 
             if (txtSQL.Visible == true)
             {
-                ShowTxtSQL();
+                ShowTxtSQL(false);
             }
         }
 
