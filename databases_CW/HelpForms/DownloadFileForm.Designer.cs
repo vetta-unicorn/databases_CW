@@ -104,7 +104,7 @@
             Controls.Add(CnclButton);
             Controls.Add(DwldButton);
             Name = "DownloadFileForm";
-            Text = "DownloadFileForm";
+            Text = "Скачивание файла";
             ResumeLayout(false);
             PerformLayout();
         }

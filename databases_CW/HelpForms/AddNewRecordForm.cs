@@ -13,17 +13,12 @@ namespace databases_CW
 {
     public partial class AddNewRecordForm : Form
     {
-        //public Dictionary<string, string> FieldValues;
-        //private string tableName;
-        //private List<string> columns;
         public Dictionary<string, object> FieldValues;
         private List<ColumnMetadata> columnsMetadata;
         string connectionString;
 
         public AddNewRecordForm(string tableName,
         List<ColumnMetadata> columnsMetadata, string connectionString)
-        //public AddNewRecordForm(string tableName, 
-        //    List<string> columns)
         {
             InitializeComponent();
             this.columnsMetadata = columnsMetadata;
@@ -31,10 +26,6 @@ namespace databases_CW
             CreateInputFields();
             this.Text = $"Добавить запись в таблицу '{tableName}'";
             this.connectionString = connectionString;
-            //this.columns = columns;
-            //this.FieldValues = new Dictionary<string, string>();
-            //CreateInputFields();
-            //this.Text = $"Добавить запись в таблицу '{tableName}'";
         }
 
         private void CreateInputFields()
@@ -48,33 +39,32 @@ namespace databases_CW
                     Text = $"{column.ColumnName} ({column.DataType}):",
                     Location = new Point(10, y),
                     Size = new Size(200, 25),
-                    Font = new Font("Arial", 10),
+                    Font = new Font("STFangsong", 14f, FontStyle.Regular),
                     Tag = column
                 };
 
                 Control inputControl;
 
-                // Выбираем подходящий контрол в зависимости от типа данных
+                // элемент управления -> тип данных
                 if (column.DataType.Contains("int") ||
                     column.DataType.Contains("decimal") ||
                     column.DataType.Contains("numeric") ||
                     column.DataType.Contains("real") ||
                     column.DataType.Contains("float"))
                 {
-                    var numericBox = new NumericUpDown
+                    var numericBox = new NumericUpDown // числовой бокс
                     {
                         Name = $"num_{column.ColumnName}",
                         Location = new Point(220, y),
                         Size = new Size(250, 25),
                         Tag = column,
-                        Font = new Font("Arial", 10),
+                        Font = new Font("STFangsong", 12f, FontStyle.Regular),
                         DecimalPlaces = column.DataType.Contains("decimal") ||
                                       column.DataType.Contains("numeric") ? 2 : 0,
                         Minimum = decimal.MinValue,
                         Maximum = decimal.MaxValue
                     };
 
-                    // Устанавливаем разумные ограничения для разных типов
                     if (column.DataType == "smallint")
                     {
                         numericBox.Minimum = short.MinValue;
@@ -88,7 +78,8 @@ namespace databases_CW
 
                     inputControl = numericBox;
                 }
-                else if (column.DataType == "boolean" || column.DataType == "bool")
+                else if (column.DataType == "boolean" 
+                    || column.DataType == "bool") // логический бокс
                 {
                     var comboBox = new ComboBox
                     {
@@ -96,7 +87,7 @@ namespace databases_CW
                         Location = new Point(220, y),
                         Size = new Size(250, 25),
                         Tag = column,
-                        Font = new Font("Arial", 10),
+                        Font = new Font("STFangsong", 12f, FontStyle.Regular),
                         DropDownStyle = ComboBoxStyle.DropDownList
                     };
                     comboBox.Items.AddRange(new object[] { "True", "False" });
@@ -104,7 +95,7 @@ namespace databases_CW
 
                     inputControl = comboBox;
                 }
-                else if (column.DataType == "date")
+                else if (column.DataType == "date") // бокс с датой (календарик)
                 {
                     var datePicker = new DateTimePicker
                     {
@@ -112,7 +103,7 @@ namespace databases_CW
                         Location = new Point(220, y),
                         Size = new Size(250, 25),
                         Tag = column,
-                        Font = new Font("Arial", 10),
+                        Font = new Font("STFangsong", 12f, FontStyle.Regular),
                         Format = DateTimePickerFormat.Short
                     };
 
@@ -120,13 +111,13 @@ namespace databases_CW
                 }
                 else if (column.DataType.Contains("timestamp"))
                 {
-                    var dateTimePicker = new DateTimePicker
+                    var dateTimePicker = new DateTimePicker // точное время
                     {
                         Name = $"dtp_{column.ColumnName}",
                         Location = new Point(220, y),
                         Size = new Size(250, 25),
                         Tag = column,
-                        Font = new Font("Arial", 10),
+                        Font = new Font("STFangsong", 12f, FontStyle.Regular),
                         Format = DateTimePickerFormat.Custom,
                         CustomFormat = "dd.MM.yyyy HH:mm:ss",
                         ShowUpDown = true
@@ -142,7 +133,7 @@ namespace databases_CW
                         Location = new Point(220, y),
                         Size = new Size(250, 25),
                         Tag = column,
-                        Font = new Font("Arial", 10),
+                        Font = new Font("STFangsong", 12f, FontStyle.Regular),
                         Text = column.IsNullable ? "" : "0"
                     };
 
@@ -164,7 +155,7 @@ namespace databases_CW
                 Location = new Point(120, y + 20),
                 Size = new Size(100, 35),
                 DialogResult = DialogResult.OK,
-                Font = new Font("Arial", 10, FontStyle.Bold)
+                Font = new Font("STFangsong", 14f, FontStyle.Regular)
             };
 
             var button_2 = new Button
@@ -173,7 +164,7 @@ namespace databases_CW
                 Location = new Point(250, y + 20),
                 Size = new Size(100, 35),
                 DialogResult = DialogResult.Cancel,
-                Font = new Font("Arial", 10)
+                Font = new Font("STFangsong", 14f, FontStyle.Regular)
             };
 
             button_1.Click += button1_Click;
@@ -187,71 +178,9 @@ namespace databases_CW
             this.MinimizeBox = false;
             this.AcceptButton = button_1;
             this.CancelButton = button_2;
-
-
-
-                //int y = 10;
-
-                //foreach (var column in columns)
-                //{
-                //    var label = new Label
-                //    {
-                //        Text = $"{column}:",
-                //        Location = new Point(10, y),
-                //        Size = new Size(150, 25),
-                //        Font = new Font("Arial", 10)
-                //    };
-
-                //    var textBox = new TextBox
-                //    {
-                //        Name = $"txt_{column}",
-                //        Location = new Point(170, y),
-                //        Size = new Size(250, 25),
-                //        Tag = column,
-                //        Font = new Font("Arial", 10),
-                //        Text = "0"
-                //    };
-
-                //    this.Controls.Add(label);
-                //    this.Controls.Add(textBox);
-
-                //    y += 35;
-                //}
-
-                //var button_1 = new Button
-                //{
-                //    Text = "Добавить",
-                //    Location = new Point(120, y + 20),
-                //    Size = new Size(100, 35),
-                //    DialogResult = DialogResult.OK,
-                //    Font = new Font("Arial", 10, FontStyle.Bold)
-                //};
-
-                //var button_2 = new Button
-                //{
-                //    Text = "Отмена",
-                //    Location = new Point(250, y + 20),
-                //    Size = new Size(100, 35),
-                //    DialogResult = DialogResult.Cancel,
-                //    Font = new Font("Arial", 10)
-                //};
-
-                //button_1.Click += button1_Click;
-
-                //this.Controls.Add(button_1);
-                //this.Controls.Add(button_2);
-
-                //this.ClientSize = new Size(450, y + 80);
-                //this.StartPosition = FormStartPosition.CenterParent;
-                //this.FormBorderStyle = FormBorderStyle.FixedDialog;
-                //this.MaximizeBox = false;
-                //this.MinimizeBox = false;
-                //this.AcceptButton = button_1;
-                //this.CancelButton = button_2;
-            
         }
 
-        // Согласие
+        // Добавить запись
         private void button1_Click(object sender, EventArgs e)
         {
             FieldValues.Clear();
@@ -290,21 +219,6 @@ namespace databases_CW
                 }
             }
             DialogResult = DialogResult.OK;
-            //FieldValues.Clear();
-            //{
-            //    FieldValues.Clear();
-            //    foreach (Control control in this.Controls)
-            //    {
-            //        if (control is TextBox textBox && textBox.Tag != null)
-            //        {
-            //            string fieldName = textBox.Tag.ToString();
-            //            string fieldValue = textBox.Text.Trim();
-
-            //            FieldValues[fieldName] = fieldValue;
-            //        }
-            //    }
-            //    DialogResult = DialogResult.OK;
-            //}
         }
 
         private void AddNewRecordForm_Load(object sender, EventArgs e)

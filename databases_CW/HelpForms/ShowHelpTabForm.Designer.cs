@@ -1,6 +1,6 @@
-﻿namespace databases_CW
+﻿namespace databases_CW.HelpForms
 {
-    partial class AddNewRecordForm
+    partial class ShowHelpTabForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,19 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
+            button1 = new Button();
             SuspendLayout();
             // 
-            // AddNewRecordForm
+            // button1
+            // 
+            button1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button1.Location = new Point(259, 399);
+            button1.Name = "button1";
+            button1.Size = new Size(110, 39);
+            button1.TabIndex = 0;
+            button1.Text = "Закрыть";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // ShowHelpTabForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(479, 266);
-            Name = "AddNewRecordForm";
-            Text = "AddNewRecordForm";
-            Load += AddNewRecordForm_Load;
+            ClientSize = new Size(686, 450);
+            Controls.Add(button1);
+            Name = "ShowHelpTabForm";
+            Text = "Руководство пользователя";
             ResumeLayout(false);
         }
 
         #endregion
+
+        private Button button1;
     }
 }

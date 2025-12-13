@@ -18,6 +18,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using databases_CW.DB_Write;
 using databases_CW.DB_Read;
 using databases_CW.DB_Models;
+using databases_CW.Tabs;
+using databases_CW.HelpForms;
 
 namespace databases_CW
 {
@@ -25,7 +27,7 @@ namespace databases_CW
     {
         private delegate void PrintDelegate(string message);
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
-       
+
 
         private DB_Dicrectories directories = new DB_Dicrectories();
         private DB_User user;
@@ -176,13 +178,22 @@ namespace databases_CW
                             button4.Visible = true; button4.Enabled = false; // пока что false
                             button5.Visible = true; button5.Enabled = false;
                         }
+                        if (root.root.name == "Справка")
+                        {
+                            button2.Visible = false; button3.Visible = false;
+                            button4.Visible = false; button5.Visible = false;
+                            button7.Visible= false; button8.Visible = false;
+                            using (var helper = new ShowHelpTabForm())
+                            {
+                                helper.ShowDialog();
+                            }
+                        }
                         else
                         {
                             ShowTxtSQL(false);
                             button7.Visible = false; button7.Enabled = false;
                             button8.Visible = false; button8.Enabled = false;
 
-                            //directories.LoadTableData(child.root.function_name, connectionString, dataGridViewReferences);
                             directories.LoadAndReplaceForeignKeys(child.root.function_name,
                                 connectionString, dataGridViewReferences);
                             currentTableName = child.root.function_name;
@@ -456,7 +467,7 @@ namespace databases_CW
         {
             directories.LoadTableData(currentTable.function_name, connectionString, dataGridViewReferences);
         }
-        
+
         // очистить панель
         private void ClearGaraGridView()
         {
@@ -502,5 +513,14 @@ namespace databases_CW
                 downloadForm.SaveDataToFile();
             }
         }
+
+        // tmp - открыть html 
+        //private void button9_Click(object sender, EventArgs e)
+        //{
+        //    using (var form2 = new ShowHelpTabForm())
+        //    {
+        //        form2.ShowDialog(); 
+        //    }
+        //}
     }
 }

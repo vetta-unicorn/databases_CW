@@ -124,7 +124,6 @@ namespace databases_CW.DB_Write
                     connection.Open();
 
                     var setClause = string.Join(", ", values.Keys.Select(k => $"{k} = @{k}"));
-
                     string query = $"UPDATE {tableName} SET {setClause} WHERE id = @id";
 
                     using (var command = new NpgsqlCommand(query, connection))
@@ -133,13 +132,31 @@ namespace databases_CW.DB_Write
 
                         foreach (var kvp in values)
                         {
-                            command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
+                            if (kvp.Value == null || kvp.Value == DBNull.Value)
+                            {
+                                command.Parameters.AddWithValue("@" + kvp.Key, DBNull.Value);
+                            }
+                            else if (kvp.Value is string str && string.IsNullOrWhiteSpace(str))
+                            {
+                                // Проверяем, можно ли установить пустую строку
+                                command.Parameters.AddWithValue("@" + kvp.Key, DBNull.Value);
+                            }
+                            else
+                            {
+                                command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value);
+                            }
                         }
 
                         int rowsAffected = command.ExecuteNonQuery();
                         return rowsAffected > 0;
                     }
                 }
+            }
+            catch (PostgresException ex)
+            {
+                MessageBox.Show($"Ошибка PostgreSQL: {ex.Message}\nДетали: {ex.Detail}",
+                               "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
             catch (Exception ex)
             {
@@ -148,6 +165,40 @@ namespace databases_CW.DB_Write
                 return false;
             }
         }
+
+        //public bool UpdateRecord(string tableName, string connectionString, int id, Dictionary<string, object> values)
+        //{
+        //    try
+        //    {
+        //        using (var connection = new NpgsqlConnection(connectionString))
+        //        {
+        //            connection.Open();
+
+        //            var setClause = string.Join(", ", values.Keys.Select(k => $"{k} = @{k}"));
+
+        //            string query = $"UPDATE {tableName} SET {setClause} WHERE id = @id";
+
+        //            using (var command = new NpgsqlCommand(query, connection))
+        //            {
+        //                command.Parameters.AddWithValue("@id", id);
+
+        //                foreach (var kvp in values)
+        //                {
+        //                    command.Parameters.AddWithValue("@" + kvp.Key, kvp.Value ?? DBNull.Value);
+        //                }
+
+        //                int rowsAffected = command.ExecuteNonQuery();
+        //                return rowsAffected > 0;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Ошибка обновления записи: {ex.Message}", "Ошибка",
+        //                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return false;
+        //    }
+        //}
 
 
         //public DataTable FilterRecords(string tableName, string connectionString,

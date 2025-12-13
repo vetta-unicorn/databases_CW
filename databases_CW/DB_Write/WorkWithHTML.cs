@@ -45,5 +45,24 @@ namespace databases_CW.DB_Write
 
             File.WriteAllText(filePath, sb.ToString());
         }
+
+        public static string GetFromHtml(string filePath)
+        {
+            string finalString = "";
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+                foreach (string line in lines)
+                {
+                    finalString+= line;
+                }
+                return finalString;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

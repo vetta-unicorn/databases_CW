@@ -34,14 +34,15 @@
             label1 = new Label();
             txtColumn = new TextBox();
             label2 = new Label();
+            panel1 = new Panel();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button1.Location = new Point(162, 218);
+            button1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button1.Location = new Point(184, 234);
             button1.Name = "button1";
-            button1.Size = new Size(125, 29);
+            button1.Size = new Size(137, 42);
             button1.TabIndex = 0;
             button1.Text = "Сохранить";
             button1.UseVisualStyleBackColor = true;
@@ -56,10 +57,10 @@
             // 
             // button2
             // 
-            button2.Font = new Font("STFangsong", 11.999999F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button2.Location = new Point(49, 218);
+            button2.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            button2.Location = new Point(22, 234);
             button2.Name = "button2";
-            button2.Size = new Size(94, 29);
+            button2.Size = new Size(137, 42);
             button2.TabIndex = 2;
             button2.Text = "Удалить";
             button2.UseVisualStyleBackColor = true;
@@ -68,6 +69,7 @@
             // label1
             // 
             label1.AutoSize = true;
+            label1.BackColor = SystemColors.GradientInactiveCaption;
             label1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label1.Location = new Point(49, 122);
             label1.Name = "label1";
@@ -85,6 +87,7 @@
             // label2
             // 
             label2.AutoSize = true;
+            label2.BackColor = SystemColors.GradientInactiveCaption;
             label2.Font = new Font("STFangsong", 13.7999992F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label2.Location = new Point(49, 35);
             label2.Name = "label2";
@@ -92,19 +95,29 @@
             label2.TabIndex = 5;
             label2.Text = "Введите название колонки";
             // 
+            // panel1
+            // 
+            panel1.BackColor = SystemColors.GradientInactiveCaption;
+            panel1.Location = new Point(37, 12);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(331, 200);
+            panel1.TabIndex = 6;
+            // 
             // AddEditForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.Info;
             ClientSize = new Size(416, 288);
+            Controls.Add(button1);
             Controls.Add(label2);
             Controls.Add(txtColumn);
             Controls.Add(label1);
             Controls.Add(button2);
             Controls.Add(txtName);
-            Controls.Add(button1);
+            Controls.Add(panel1);
             Name = "AddEditForm";
-            Text = "AddEditForm";
+            Text = "Изменить запись";
             ResumeLayout(false);
             PerformLayout();
         }
@@ -117,5 +130,6 @@
         private Label label1;
         private TextBox txtColumn;
         private Label label2;
+        private Panel panel1;
     }
 }

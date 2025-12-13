@@ -15,6 +15,8 @@ namespace databases_CW
         public Authorise()
         {
             InitializeComponent();
+            textBox1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
+            textBox2.Font = new Font("STFangsong", 14f, FontStyle.Regular);
         }
 
         // вход

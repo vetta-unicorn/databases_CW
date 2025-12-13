@@ -56,8 +56,10 @@ namespace databases_CW.DB_Models
         {
             Access = new Dictionary<string, int>
             {
-                {"Справочники", 2 },
-                {"Документы", 2 }
+                { "Справочники", 2 },
+                { "Документы", 2 },
+                { "Справка", 2 },
+                { "Разное", 2 }
             };
         }
 

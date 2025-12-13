@@ -86,11 +86,11 @@ namespace databases_CW.DB_Read
 
                     // Запрос для получения информации о колонках таблицы
                     string query = @"
-                SELECT column_name 
-                FROM information_schema.columns 
-                WHERE table_name = @tableName 
-                AND table_schema = 'public'
-                ORDER BY ordinal_position";
+                        SELECT column_name 
+                        FROM information_schema.columns 
+                        WHERE table_name = @tableName 
+                        AND table_schema = 'public'
+                        ORDER BY ordinal_position";
 
                     using (var command = new NpgsqlCommand(query, connection))
                     {
