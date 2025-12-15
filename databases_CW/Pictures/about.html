@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О программе | Система учета книжного магазина</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e1e5eb;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+
+        h2::before {
+            content: '▸';
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 1.3rem;
+            margin: 20px 0 15px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e5eb;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: #3498db;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .feature-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .user-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .user-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .user-list li::before {
+            content: '👤';
+            position: absolute;
+            left: 0;
+            top: 10px;
+        }
+
+        .capabilities {
+            list-style: none;
+            padding: 0;
+        }
+
+        .capabilities li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .capabilities li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #2ecc71;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #3498db;
+        }
+
+        .info-item strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .important-note {
+            background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ffd54f;
+            margin: 30px 0;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .important-note::before {
+            content: 'ℹ️';
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-size: 1.5rem;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #34495e;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+
+        .accent {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .header, .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .features-grid, .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📚</div>
+            <h1>Система учета для книжного магазина</h1>
+            <p class="subtitle">Учебная курсовая работа по дисциплине "Базы данных"</p>
+            <p class="subtitle">Проект автоматизации бизнес-процессов торгового предприятия</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>Назначение программы</h2>
+                <p>Данная программа разработана в рамках выполнения курсовой работы по дисциплине <span class="accent">"Базы данных"</span>. Она представляет собой учебный проект - информационную систему для автоматизации работы мелкооптового книжного магазина.</p>
+                
+                <div class="highlight">
+                    <h3>Цель разработки:</h3>
+                    <ul class="capabilities">
+                        <li>Практическое применение знаний по проектированию баз данных</li>
+                        <li>Разработка полнофункционального приложения с интерфейсом пользователя</li>
+                        <li>Автоматизация типовых бизнес-процессов торгового предприятия</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Основные возможности программы</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📦</div>
+                        <h4>Управление ассортиментом</h4>
+                        <p>Учет поступлений, остатков и движения книг на складе</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🚚</div>
+                        <h4>Работа с поставщиками</h4>
+                        <p>Заказы, приемка товара, учет поставок и взаимодействие</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h4>Обслуживание покупателей</h4>
+                        <p>Оформление заказов, ведение клиентской базы</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍💼</div>
+                        <h4>Управление персоналом</h4>
+                        <p>Кадровый учет, трудовые книжки, история сотрудников</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Основные пользователи системы</h2>
+                <ul class="user-list">
+                    <li><strong>Владелец магазина</strong> - полный доступ ко всем данным и отчетам</li>
+                    <li><strong>Менеджер по продажам</strong> - работа с заказами и взаимодействие с клиентами</li>
+                    <li><strong>Товаровед</strong> - управление ассортиментом и поставками товаров</li>
+                    <li><strong>Бухгалтер</strong> - кадровый учет и ведение документации</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>Что может делать программа</h2>
+                <ul class="capabilities">
+                    <li>Добавлять и редактировать информацию о книгах</li>
+                    <li>Вести учет поставок от издательств и дистрибьюторов</li>
+                    <li>Оформлять заказы от покупателей и отслеживать их статусы</li>
+                    <li>Управлять данными сотрудников и кадровыми мероприятиями</li>
+                    <li>Формировать аналитические отчеты по продажам</li>
+                    <li>Хранить полную историю всех операций и изменений</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>Технические особенности</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Платформа</strong>
+                        .NET с использованием Windows Forms
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Хранение данных</strong>
+                        Реляционная база данных
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Интерфейс</strong>
+                        Интуитивно понятный графический
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Безопасность</strong>
+                        Обеспечение целостности данных
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Для кого создана программа</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h4>Для студентов</h4>
+                        <p>Изучающих проектирование и разработку баз данных</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>Для преподавателей</h4>
+                        <p>Оценивающих учебные проекты и практические навыки</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h4>Как демонстрация</h4>
+                        <p>Пример автоматизации бизнес-процессов предприятия</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="important-note">
+                <h3>Важная информация</h3>
+                <p>Это <strong>учебный проект</strong>, предназначенный для демонстрации навыков проектирования и разработки баз данных. Программа не является коммерческим продуктом и создана исключительно в образовательных целях.</p>
+            </div>
+
+            <div class="section">
+                <h2>Информация о проекте</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Автор</strong>
+                        Елизавета Лантух
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Группа</strong>
+                        АВТ-313
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Год разработки</strong>
+                        2025
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Учебное заведение</strong>
+                        НГТУ
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Преподаватель</strong>
+                        Антонянц Егор Николаевич
+                    </div>
+                    
+                    <div class="info-item">
+                        <strong>Дисциплина</strong>
+                        <span class="accent">Базы данных</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Учебный проект по курсу "Базы данных" | <span class="accent">НГТУ 2025</span></p>
+            <p>Разработано для демонстрации навыков проектирования и программирования</p>
+            <p><span class="tag">Windows Forms</span> <span class="tag">.NET</span> <span class="tag">Базы данных</span> <span class="tag">C#</span></p>
+        </div>
+    </div>
+
+    <script>
+        // Простой скрипт для плавного появления элементов
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.feature-card, .info-item').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

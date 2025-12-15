@@ -27,7 +27,8 @@ namespace databases_CW
     {
         private delegate void PrintDelegate(string message);
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
-
+        private string userHelpPath = @"C:\Users\lisal\source\repos\databases_CW\databases_CW\Pictures\user_help.html";
+        private string aboutPath = @"C:\Users\lisal\source\repos\databases_CW\databases_CW\Pictures\about.html";
 
         private DB_Dicrectories directories = new DB_Dicrectories();
         private DB_User user;
@@ -39,6 +40,7 @@ namespace databases_CW
         IGetLevel role;
         GetColumns getColumns;
         Documents docs;
+        RefTab refTabs;
         DocSelect docSelect;
         int defaultHeight;
         public MainForm()
@@ -50,7 +52,9 @@ namespace databases_CW
             TableMenu table = new TableMenu();
             table.SetMenu();
             docs = new Documents();
+            refTabs = new RefTab();
             docs.InsertIntoTableMenu(table.menu);
+            refTabs.InsertRefTabs(table.menu);
             InitializeMenuStrip(table.menu);
             menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
@@ -129,22 +133,7 @@ namespace databases_CW
             foreach (var tree in trees)
             {
                 ToolStripMenuItem menuItem = new ToolStripMenuItem(tree.root.name);
-                PrintDelegate printMethod;
 
-                if (tree.children == null || tree.children.Count() == 0)
-                {
-                    printMethod = (message) =>
-                    {
-                        MessageBox.Show($"You have called method: {message}");
-                    };
-                }
-
-                else
-                {
-                    printMethod = (message) => { };
-                }
-
-                menuItem.Click += (sender, e) => printMethod(tree.root.function_name);
                 SetStatus(menuItem, tree);
 
                 if (tree.children != null && tree.children.Count > 0)
@@ -178,12 +167,15 @@ namespace databases_CW
                             button4.Visible = true; button4.Enabled = false; // пока что false
                             button5.Visible = true; button5.Enabled = false;
                         }
-                        if (root.root.name == "Справка")
+                        else if (root.root.name == "Справка")
                         {
                             button2.Visible = false; button3.Visible = false;
                             button4.Visible = false; button5.Visible = false;
-                            button7.Visible= false; button8.Visible = false;
-                            using (var helper = new ShowHelpTabForm())
+                            button7.Visible = false; button8.Visible = false;
+                            string tmpPath = "";
+                            if (child.root.name == "Руководство пользователя") { tmpPath = userHelpPath; }
+                            else if (child.root.name == "О программе") { tmpPath = aboutPath; }
+                            using (var helper = new ShowHelpTabForm(tmpPath))
                             {
                                 helper.ShowDialog();
                             }

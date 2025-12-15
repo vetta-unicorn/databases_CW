@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Руководство пользователя - Книжный магазин</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .book-icon {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        section {
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #4a6491;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: #4a6491;
+        }
+        
+        .intro-text {
+            font-size: 1.15rem;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            background-color: #f0f7ff;
+            border-left: 4px solid #4a6491;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        thead {
+            background-color: #4a6491;
+            color: white;
+        }
+        
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #eaeaea;
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8fafd;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tbody tr:nth-child(even):hover {
+            background-color: #f0f5ff;
+        }
+        
+        td {
+            padding: 16px 15px;
+            vertical-align: top;
+        }
+        
+        .function-list {
+            list-style-type: none;
+            margin-left: 5px;
+        }
+        
+        .function-list li {
+            padding: 12px 0 12px 40px;
+            position: relative;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .function-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .function-list li i {
+            position: absolute;
+            left: 0;
+            top: 14px;
+            color: #4a6491;
+            font-size: 1.2rem;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background-color: #e9f7ef;
+            color: #27ae60;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .role-badge.restricted {
+            background-color: #fee;
+            color: #e74c3c;
+        }
+        
+        .footer-note {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            border-top: 2px solid #eaeaea;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 25px 20px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .book-icon {
+                position: static;
+                margin-top: 15px;
+                font-size: 2.5rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .function-list li {
+                padding-left: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-open"></i> Руководство пользователя</h1>
+            <p>Автоматизированная информационная система для мелкооптового книжного магазина</p>
+            <div class="book-icon">
+                <i class="fas fa-book"></i>
+            </div>
+        </header>
+        
+        <div class="content">
+            <section class="intro">
+                <h2><i class="fas fa-info-circle"></i> О программе</h2>
+                <p class="intro-text">
+                    Данная программа - это автоматизированная информационная система для мелкооптового книжного магазина, 
+                    разработанная для управления базой данных. Программа состоит из нескольких функциональных разделов, 
+                    каждый из которых предназначен для решения конкретных задач управления магазином.
+                </p>
+                
+                <div class="highlight">
+                    <p><strong>Основное назначение:</strong> управление базой данных книжного магазина, включая работу с товарами, заказами, поставками и персоналом.</p>
+                </div>
+            </section>
+            
+            <section class="sections">
+                <h2><i class="fas fa-th-list"></i> Разделы программы</h2>
+                <p>Программа состоит из следующих разделов:</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Раздел</th>
+                                <th>Доступность</th>
+                                <th>Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Справочники</strong></td>
+                                <td><span class="role-badge">Все пользователи</span></td>
+                                <td>Базовая справочная информация, необходимая для работы системы</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Документы</strong></td>
+                                <td><span class="role-badge">Все пользователи</span></td>
+                                <td>Работа с документацией и отчетами</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Справка</strong></td>
+                                <td><span class="role-badge">Все пользователи</span></td>
+                                <td>Руководство пользователя и информация о программе</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Разное</strong></td>
+                                <td><span class="role-badge">Все пользователи</span></td>
+                                <td>Дополнительные инструменты и настройки</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Заказы</strong></td>
+                                <td><span class="role-badge restricted">По ролям</span></td>
+                                <td>Управление заказами клиентов</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Книги</strong></td>
+                                <td><span class="role-badge restricted">По ролям</span></td>
+                                <td>Управление каталогом книг и ассортиментом</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Поставки</strong></td>
+                                <td><span class="role-badge restricted">По ролям</span></td>
+                                <td>Управление поставками от поставщиков</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Отдел кадров</strong></td>
+                                <td><span class="role-badge restricted">По ролям</span></td>
+                                <td>Управление персоналом и кадровые операции</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p><strong>Примечание:</strong> Разделы "Справочники", "Документы", "Справка" и "Разное" доступны всем пользователям. Остальные разделы доступны только для определенных ролей пользователей.</p>
+            </section>
+            
+            <section class="functions">
+                <h2><i class="fas fa-cogs"></i> Функциональные возможности</h2>
+                <p>Программа поддерживает следующие основные функции:</p>
+                
+                <ul class="function-list">
+                    <li>
+                        <i class="fas fa-table"></i>
+                        <strong>Просмотр всех таблиц</strong> - возможность просматривать все таблицы базы данных в удобном интерфейсе
+                    </li>
+                    <li>
+                        <i class="fas fa-edit"></i>
+                        <strong>CRUD-операции</strong> - создание, чтение, обновление и удаление записей (доступны в зависимости от ролей пользователей)
+                    </li>
+                    <li>
+                        <i class="fas fa-database"></i>
+                        <strong>Работа с SQL-запросами</strong> - просмотр типовых SQL-запросов и возможность написания собственных. Результаты запросов можно скачать в формате HTML-файла
+                    </li>
+                </ul>
+            </section>
+            
+            <section class="additional">
+                <h2><i class="fas fa-tools"></i> Дополнительные возможности</h2>
+                <p>В программе также реализованы следующие разделы:</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Раздел</th>
+                                <th>Функциональность</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Справка</strong></td>
+                                <td>Содержит руководство пользователя и информацию о программе</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Личный кабинет</strong></td>
+                                <td>Настройка программы и смена пароля пользователя</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <div class="footer-note">
+                <p>Для получения дополнительной информации или помощи в использовании программы обратитесь к администратору системы.</p>
+                <p style="margin-top: 10px;"><i class="fas fa-exclamation-circle"></i> Помните: некоторые функции доступны только пользователям с соответствующими ролями.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Добавляем интерактивности для строк таблицы
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableRows = document.querySelectorAll('tbody tr');
+            
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // Подсветка текущей даты в футере
+            const now = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const dateString = now.toLocaleDateString('ru-RU', options);
+            
+            const footerNote = document.querySelector('.footer-note');
+            const dateElement = document.createElement('p');
+            dateElement.style.marginTop = '10px';
+            dateElement.style.fontSize = '0.9rem';
+            dateElement.innerHTML = `<i class="far fa-calendar-alt"></i> Дата просмотра: ${dateString}`;
+            footerNote.appendChild(dateElement);
+        });
+    </script>
+</body>
+</html>
