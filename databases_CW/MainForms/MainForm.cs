@@ -36,6 +36,7 @@ namespace databases_CW
         System.Windows.Forms.TextBox oldPasswordWin;
         System.Windows.Forms.TextBox newPasswordWin;
         System.Windows.Forms.TextBox repPasswordWin;
+        System.Windows.Forms.Button changePass;
 
         private DB_Dicrectories directories = new DB_Dicrectories();
         private DB_User user;
@@ -89,7 +90,7 @@ namespace databases_CW
             txtSQL.Visible = false;
         }
 
-        private void CreatePasswordScreen()
+        private void OpenPanel()
         {
             // Скрываем DataGridView
             dataGridViewReferences.Visible = false;
@@ -102,11 +103,14 @@ namespace databases_CW
             passPanelContainer.Left = dataGridViewReferences.Left + 100;
             passPanelContainer.Top = dataGridViewReferences.Top + 100;
             passPanelContainer.BackColor = Color.FromArgb(240, 248, 255);
-            passPanelContainer.Visible = true; 
+            passPanelContainer.Visible = true;
 
             this.Controls.Add(passPanelContainer);
             passPanelContainer.BringToFront();
+        }
 
+        private void CreatePasswordScreen()
+        {
             // старый пароль
             oldPasswordWin = new System.Windows.Forms.TextBox();
             oldPasswordWin.Font = new Font("STFangsong", 13f, FontStyle.Regular);
@@ -143,7 +147,7 @@ namespace databases_CW
             repPasswordWin.PasswordChar = '*'; 
 
             // кнопка
-            System.Windows.Forms.Button changePass = new System.Windows.Forms.Button();
+            changePass = new System.Windows.Forms.Button();
             changePass.Text = "Сменить пароль";
             changePass.Font = new Font("STFangsong", 13f, FontStyle.Regular);
             changePass.Size = new Size(500, 40);
@@ -157,6 +161,39 @@ namespace databases_CW
             passPanelContainer.Controls.Add(newPasswordWin);
             passPanelContainer.Controls.Add(repPasswordWin);
             passPanelContainer.Controls.Add(changePass);
+        }
+
+        private void HideAndDisposePasswordControls()
+        {
+            if (passPanelContainer != null)
+            {
+                passPanelContainer.Visible = false;
+
+                // Сохраняем ссылки, если нужно будет пересоздать
+                if (oldPasswordWin != null)
+                {
+                    oldPasswordWin.Dispose();
+                    oldPasswordWin = null;
+                }
+                if (newPasswordWin != null)
+                {
+                    newPasswordWin.Dispose();
+                    newPasswordWin = null;
+                }
+                if (repPasswordWin != null)
+                {
+                    repPasswordWin.Dispose();
+                    repPasswordWin = null;
+                }
+                if (changePass != null)
+                {
+                    changePass.Dispose();
+                    changePass = null;
+                }
+
+                // Очищаем панель
+                passPanelContainer.Controls.Clear();
+            }
         }
 
         private void changePass_Click(object sender, EventArgs e)
@@ -263,9 +300,11 @@ namespace databases_CW
                     childMenuItem.Click += (sender, e) =>
                     {
                         ClearGaraGridView();
+                        HideAndDisposePasswordControls();
                         if (root.root.name == "Документы")
                         {
                             txtSQL.Text = child.root.function_name;
+                            dataGridViewReferences.Visible = true;
                             ShowTxtSQL(true);
                             SwapButtons(button2, button7);
                             SwapButtons(button3, button8);
@@ -290,7 +329,8 @@ namespace databases_CW
                         else if (root.root.name == "Разное")
                         {
                             ShowTxtSQL(false);
-                            CreatePasswordScreen();
+                            OpenPanel();
+                            if (child.root.name == "Смена пароля") { CreatePasswordScreen(); }
                         }
                         else
                         {
@@ -545,6 +585,8 @@ namespace databases_CW
             {
                 ShowTxtSQL(false);
             }
+
+            passPanelContainer.Visible = false;
         }
 
         // Выполнить запрос

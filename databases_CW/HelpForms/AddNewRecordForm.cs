@@ -76,9 +76,12 @@ namespace databases_CW
                         numericBox.Maximum = int.MaxValue;
                     }
 
+                    // Заполнение по умолчанию для числовых типов: 0
+                    numericBox.Value = 0;
+
                     inputControl = numericBox;
                 }
-                else if (column.DataType == "boolean" 
+                else if (column.DataType == "boolean"
                     || column.DataType == "bool") // логический бокс
                 {
                     var comboBox = new ComboBox
@@ -91,7 +94,9 @@ namespace databases_CW
                         DropDownStyle = ComboBoxStyle.DropDownList
                     };
                     comboBox.Items.AddRange(new object[] { "True", "False" });
-                    comboBox.SelectedIndex = 0;
+
+                    // Заполнение по умолчанию для булевых типов: True
+                    comboBox.SelectedItem = "True";
 
                     inputControl = comboBox;
                 }
@@ -106,6 +111,9 @@ namespace databases_CW
                         Font = new Font("STFangsong", 12f, FontStyle.Regular),
                         Format = DateTimePickerFormat.Short
                     };
+
+                    // Заполнение по умолчанию для даты: сегодняшняя дата
+                    datePicker.Value = DateTime.Today;
 
                     inputControl = datePicker;
                 }
@@ -123,9 +131,12 @@ namespace databases_CW
                         ShowUpDown = true
                     };
 
+                    // Заполнение по умолчанию для timestamp: текущая дата и время
+                    dateTimePicker.Value = DateTime.Now;
+
                     inputControl = dateTimePicker;
                 }
-                else
+                else // текстовые типы (varchar, char, text и т.д.)
                 {
                     var textBox = new TextBox
                     {
@@ -134,7 +145,8 @@ namespace databases_CW
                         Size = new Size(250, 25),
                         Tag = column,
                         Font = new Font("STFangsong", 12f, FontStyle.Regular),
-                        Text = column.IsNullable ? "" : "0"
+                        // Заполнение по умолчанию для строковых типов: "new"
+                        Text = "new"
                     };
 
                     if (column.MaxLength > 0)
@@ -143,11 +155,167 @@ namespace databases_CW
                     inputControl = textBox;
                 }
 
+                // Если поле nullable, можно добавить специальную обработку
+                if (column.IsNullable)
+                {
+                    // Для nullable полей можно добавить CheckBox для указания NULL
+                    var nullCheckBox = new CheckBox
+                    {
+                        Text = "NULL",
+                        Location = new Point(480, y),
+                        Size = new Size(60, 25),
+                        Font = new Font("STFangsong", 10f, FontStyle.Regular),
+                        Tag = inputControl // сохраняем ссылку на основной элемент
+                    };
+
+                    nullCheckBox.CheckedChanged += (s, e) =>
+                    {
+                        var checkBox = s as CheckBox;
+                        var mainControl = checkBox.Tag as Control;
+                        mainControl.Enabled = !checkBox.Checked;
+
+                        if (mainControl is TextBox textBox)
+                        {
+                            textBox.Text = checkBox.Checked ? "" : "new";
+                        }
+                        else if (mainControl is NumericUpDown numericBox)
+                        {
+                            numericBox.Value = checkBox.Checked ? 0 : 0;
+                        }
+                        else if (mainControl is ComboBox comboBox)
+                        {
+                            comboBox.SelectedItem = checkBox.Checked ? null : "True";
+                        }
+                        else if (mainControl is DateTimePicker datePicker)
+                        {
+                            datePicker.Value = checkBox.Checked ? DateTime.Today : DateTime.Today;
+                        }
+                    };
+
+                    this.Controls.Add(nullCheckBox);
+                }
+
                 this.Controls.Add(label);
                 this.Controls.Add(inputControl);
 
                 y += 35;
             }
+            //foreach (var column in columnsMetadata)
+            //{
+            //    var label = new Label
+            //    {
+            //        Text = $"{column.ColumnName} ({column.DataType}):",
+            //        Location = new Point(10, y),
+            //        Size = new Size(200, 25),
+            //        Font = new Font("STFangsong", 14f, FontStyle.Regular),
+            //        Tag = column
+            //    };
+
+            //    Control inputControl;
+
+            //    // элемент управления -> тип данных
+            //    if (column.DataType.Contains("int") ||
+            //        column.DataType.Contains("decimal") ||
+            //        column.DataType.Contains("numeric") ||
+            //        column.DataType.Contains("real") ||
+            //        column.DataType.Contains("float"))
+            //    {
+            //        var numericBox = new NumericUpDown // числовой бокс
+            //        {
+            //            Name = $"num_{column.ColumnName}",
+            //            Location = new Point(220, y),
+            //            Size = new Size(250, 25),
+            //            Tag = column,
+            //            Font = new Font("STFangsong", 12f, FontStyle.Regular),
+            //            DecimalPlaces = column.DataType.Contains("decimal") ||
+            //                          column.DataType.Contains("numeric") ? 2 : 0,
+            //            Minimum = decimal.MinValue,
+            //            Maximum = decimal.MaxValue
+            //        };
+
+            //        if (column.DataType == "smallint")
+            //        {
+            //            numericBox.Minimum = short.MinValue;
+            //            numericBox.Maximum = short.MaxValue;
+            //        }
+            //        else if (column.DataType == "integer")
+            //        {
+            //            numericBox.Minimum = int.MinValue;
+            //            numericBox.Maximum = int.MaxValue;
+            //        }
+
+            //        inputControl = numericBox;
+            //    }
+            //    else if (column.DataType == "boolean" 
+            //        || column.DataType == "bool") // логический бокс
+            //    {
+            //        var comboBox = new ComboBox
+            //        {
+            //            Name = $"cmb_{column.ColumnName}",
+            //            Location = new Point(220, y),
+            //            Size = new Size(250, 25),
+            //            Tag = column,
+            //            Font = new Font("STFangsong", 12f, FontStyle.Regular),
+            //            DropDownStyle = ComboBoxStyle.DropDownList
+            //        };
+            //        comboBox.Items.AddRange(new object[] { "True", "False" });
+            //        comboBox.SelectedIndex = 0;
+
+            //        inputControl = comboBox;
+            //    }
+            //    else if (column.DataType == "date") // бокс с датой (календарик)
+            //    {
+            //        var datePicker = new DateTimePicker
+            //        {
+            //            Name = $"dtp_{column.ColumnName}",
+            //            Location = new Point(220, y),
+            //            Size = new Size(250, 25),
+            //            Tag = column,
+            //            Font = new Font("STFangsong", 12f, FontStyle.Regular),
+            //            Format = DateTimePickerFormat.Short
+            //        };
+
+            //        inputControl = datePicker;
+            //    }
+            //    else if (column.DataType.Contains("timestamp"))
+            //    {
+            //        var dateTimePicker = new DateTimePicker // точное время
+            //        {
+            //            Name = $"dtp_{column.ColumnName}",
+            //            Location = new Point(220, y),
+            //            Size = new Size(250, 25),
+            //            Tag = column,
+            //            Font = new Font("STFangsong", 12f, FontStyle.Regular),
+            //            Format = DateTimePickerFormat.Custom,
+            //            CustomFormat = "dd.MM.yyyy HH:mm:ss",
+            //            ShowUpDown = true
+            //        };
+
+            //        inputControl = dateTimePicker;
+            //    }
+            //    else
+            //    {
+            //        var textBox = new TextBox
+            //        {
+            //            Name = $"txt_{column.ColumnName}",
+            //            Location = new Point(220, y),
+            //            Size = new Size(250, 25),
+            //            Tag = column,
+            //            Font = new Font("STFangsong", 12f, FontStyle.Regular),
+            //            Text = column.IsNullable ? "" : "0"
+            //        };
+
+            //        if (column.MaxLength > 0)
+            //            textBox.MaxLength = column.MaxLength;
+
+            //        inputControl = textBox;
+            //    }
+
+            //    this.Controls.Add(label);
+            //    this.Controls.Add(inputControl);
+
+            //    y += 35;
+            //}
 
             var button_1 = new Button
             {
