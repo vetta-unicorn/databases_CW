@@ -17,6 +17,7 @@ namespace databases_CW
             InitializeComponent();
             textBox1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
             textBox2.Font = new Font("STFangsong", 14f, FontStyle.Regular);
+            textBox2.PasswordChar = '*';
         }
 
         // вход
@@ -25,11 +26,11 @@ namespace databases_CW
             string username = "default";
             string password = "default";
             string fileCurrentUser = "User.json";
-
             try
             {
                 username = Convert.ToString(textBox1.Text);
                 password = Convert.ToString(textBox2.Text);
+ 
             }
             catch (Exception ex)
             {

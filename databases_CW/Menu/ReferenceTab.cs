@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace databases_CW.Menu
 {
-    public class RefTab // справка
+    public class Tab 
     {
-        //string filePath { get; set; }
-        string parent_name { get; set; }
-        public List<Tree> refChildren { get; set; }
-        public string[] childrenNames = { "Руководство пользователя", "О программе" };
+        public string parent_name { get; set; }
+        public List<Tree> Children { get; set; }
+        public List<string> childrenNames {  get; set; }
 
-        public RefTab()
+        public Tab()
         {
-            parent_name = "Справка";
-            refChildren = MakeTreChildren();
+            parent_name = "default";
+            Children = new List<Tree>();
+            childrenNames = new List<string>();
         }
 
-        public List<Tree> MakeTreChildren()
+        public List<Tree> MakeTreeChildren()
         {
             List<Tree> tempTrees = new List<Tree>();
             foreach (var child in childrenNames)
@@ -29,34 +29,40 @@ namespace databases_CW.Menu
             return tempTrees;
         }
 
-        public void InsertRefTabs(List<Tree> menu)
+        public void InsertTabs(List<Tree> menu)
         {
             foreach (Tree tree in menu)
             {
                 if (tree.root.name == parent_name)
                 {
-                    foreach (Tree refTree in refChildren)
+                    foreach (Tree refTree in Children)
                     {
                         tree.AddChild(refTree);
                     }
                 }
             }
         }
-
-        //public void InsertRefTab(List<Tree> menu)
-        //{
-        //    foreach (Tree tree in menu)
-        //    {
-        //        if (tree.root.name == parent_name)
-        //        {
-        //            foreach (Tree refTree in refChildren)
-        //            {
-        //                tree.AddChild(refTree);
-        //            }
-        //        }
-        //    }
-        //}
     }
 
+    public class RefTab : Tab // справка
+    {
+        public RefTab()
+        {
+            base.parent_name = "Справка";
+            base.childrenNames.Add("Руководство пользователя");
+            base.childrenNames.Add("О программе");
+            base.Children = MakeTreeChildren();
+        }
+    }
 
+    public class OtherTab : Tab // разное
+    {
+        public OtherTab()
+        {
+            base.parent_name = "Разное";
+            base.childrenNames.Add("Смена пароля");
+            base.childrenNames.Add("Настройка");
+            base.Children = MakeTreeChildren();
+        }
+    }
 }

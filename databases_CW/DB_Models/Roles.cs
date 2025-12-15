@@ -22,10 +22,17 @@ namespace databases_CW.DB_Models
             HashPassword = "default";
             Role = "default";
         }
-        public IGetLevel SetUser(string currUserPath)
+
+        public DB_User SetUser(string currUserPath)
         {
             string jsonString = File.ReadAllText(currUserPath);
             DB_User currUser = JsonSerializer.Deserialize<DB_User>(jsonString);
+            return currUser;
+        }
+        public IGetLevel SetRole(string currUserPath, DB_User currUser)
+        {
+            string jsonString = File.ReadAllText(currUserPath);
+            currUser = JsonSerializer.Deserialize<DB_User>(jsonString);
             if (currUser != null)
             {
                 if (currUser.Role == "master") { return new Master(); }
@@ -39,6 +46,12 @@ namespace databases_CW.DB_Models
             {
                 return new Role();
             }
+        }
+
+        public bool CheckChangePassword(string old_pass, string new_pass, string repeat)
+        {
+            if (old_pass == Password && new_pass == repeat) { return true; }
+            else { return false; }
         }
     }
 

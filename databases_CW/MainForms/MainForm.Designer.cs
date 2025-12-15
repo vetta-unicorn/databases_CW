@@ -38,7 +38,6 @@
             button6 = new Button();
             txtSQL = new RichTextBox();
             panel1 = new Panel();
-            button9 = new Button();
             button8 = new Button();
             button7 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).BeginInit();
@@ -147,7 +146,6 @@
             // panel1
             // 
             panel1.BackColor = Color.Silver;
-            panel1.Controls.Add(button9);
             panel1.Controls.Add(button8);
             panel1.Controls.Add(button7);
             panel1.Controls.Add(txtSQL);
@@ -156,18 +154,6 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1355, 618);
             panel1.TabIndex = 9;
-            // 
-            // button9
-            // 
-            button9.BackColor = SystemColors.ButtonHighlight;
-            button9.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button9.Location = new Point(78, 557);
-            button9.Name = "button9";
-            button9.Size = new Size(199, 37);
-            button9.TabIndex = 11;
-            button9.Text = "tmp";
-            button9.UseVisualStyleBackColor = false;
-            //button9.Click += button9_Click;
             // 
             // button8
             // 
@@ -231,6 +217,5 @@
         private Panel panel1;
         private Button button8;
         private Button button7;
-        private Button button9;
     }
 }

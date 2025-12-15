@@ -20,6 +20,8 @@ using databases_CW.DB_Read;
 using databases_CW.DB_Models;
 using databases_CW.Tabs;
 using databases_CW.HelpForms;
+using System.Reflection;
+using System.Runtime.Intrinsics.Arm;
 
 namespace databases_CW
 {
@@ -29,6 +31,11 @@ namespace databases_CW
         private string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
         private string userHelpPath = @"C:\Users\lisal\source\repos\databases_CW\databases_CW\Pictures\user_help.html";
         private string aboutPath = @"C:\Users\lisal\source\repos\databases_CW\databases_CW\Pictures\about.html";
+
+        private Panel passPanelContainer;
+        System.Windows.Forms.TextBox oldPasswordWin;
+        System.Windows.Forms.TextBox newPasswordWin;
+        System.Windows.Forms.TextBox repPasswordWin;
 
         private DB_Dicrectories directories = new DB_Dicrectories();
         private DB_User user;
@@ -41,6 +48,7 @@ namespace databases_CW
         GetColumns getColumns;
         Documents docs;
         RefTab refTabs;
+        OtherTab otherTab;
         DocSelect docSelect;
         int defaultHeight;
         public MainForm()
@@ -48,18 +56,24 @@ namespace databases_CW
             InitializeComponent();
             dataGridViewReferences.CellDoubleClick += dataGridViewReferences_CellDoubleClick;
             user = new DB_User();
-            role = user.SetUser(currUserPath);
+            user = user.SetUser(currUserPath);
+            role = user.SetRole(currUserPath, user);
             TableMenu table = new TableMenu();
             table.SetMenu();
+
             docs = new Documents();
             refTabs = new RefTab();
+            otherTab = new OtherTab();
             docs.InsertIntoTableMenu(table.menu);
-            refTabs.InsertRefTabs(table.menu);
+            refTabs.InsertTabs(table.menu);
+            otherTab.InsertTabs(table.menu);
             InitializeMenuStrip(table.menu);
+
             menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
             txtSQL.Visible = false;
             txtSQL.Font = new Font(txtSQL.Font.FontFamily, 13f);
+            
             record = new Records();
             getColumns = new GetColumns(connectionString);
             docSelect = new DocSelect(connectionString);
@@ -73,6 +87,99 @@ namespace databases_CW
             button8.Visible = false; button8.Enabled = false;
 
             txtSQL.Visible = false;
+        }
+
+        private void CreatePasswordScreen()
+        {
+            // Скрываем DataGridView
+            dataGridViewReferences.Visible = false;
+
+            // панель
+            passPanelContainer = new Panel();
+            passPanelContainer.Location = dataGridViewReferences.Location;
+            passPanelContainer.Width = dataGridViewReferences.Width - 100;
+            passPanelContainer.Height = dataGridViewReferences.Height - 100;
+            passPanelContainer.Left = dataGridViewReferences.Left + 100;
+            passPanelContainer.Top = dataGridViewReferences.Top + 100;
+            passPanelContainer.BackColor = Color.FromArgb(240, 248, 255);
+            passPanelContainer.Visible = true; 
+
+            this.Controls.Add(passPanelContainer);
+            passPanelContainer.BringToFront();
+
+            // старый пароль
+            oldPasswordWin = new System.Windows.Forms.TextBox();
+            oldPasswordWin.Font = new Font("STFangsong", 13f, FontStyle.Regular);
+            oldPasswordWin.Size = new Size(500, 60);
+            oldPasswordWin.Location = new Point(
+                (passPanelContainer.Width - 500) / 2, 
+                (passPanelContainer.Height - 80) / 2 
+            );
+            oldPasswordWin.PlaceholderText = "Введите старый пароль";
+            oldPasswordWin.PasswordChar = '*'; 
+
+            // новый пароль
+            newPasswordWin = new System.Windows.Forms.TextBox();
+            newPasswordWin.Font = new Font("STFangsong", 13f, FontStyle.Regular);
+            newPasswordWin.Size = new Size(500, 60);
+            newPasswordWin.Location = new Point(
+                (passPanelContainer.Width - 500) / 2, 
+                oldPasswordWin.Bottom + 10 
+            );
+
+            newPasswordWin.PlaceholderText = "Введите новый пароль";
+            newPasswordWin.PasswordChar = '*'; 
+
+            // повтор пароля
+            repPasswordWin = new System.Windows.Forms.TextBox();
+            repPasswordWin.Font = new Font("STFangsong", 13f, FontStyle.Regular);
+            repPasswordWin.Size = new Size(500, 60);
+            repPasswordWin.Location = new Point(
+                (passPanelContainer.Width - 500) / 2, 
+                newPasswordWin.Bottom + 10 
+            );
+
+            repPasswordWin.PlaceholderText = "Введите новый пароль повторно";
+            repPasswordWin.PasswordChar = '*'; 
+
+            // кнопка
+            System.Windows.Forms.Button changePass = new System.Windows.Forms.Button();
+            changePass.Text = "Сменить пароль";
+            changePass.Font = new Font("STFangsong", 13f, FontStyle.Regular);
+            changePass.Size = new Size(500, 40);
+            changePass.Location = new Point(
+                (passPanelContainer.Width - 500) / 2,
+                repPasswordWin.Bottom + 10
+            );
+            changePass.Click += changePass_Click;
+
+            passPanelContainer.Controls.Add(oldPasswordWin);
+            passPanelContainer.Controls.Add(newPasswordWin);
+            passPanelContainer.Controls.Add(repPasswordWin);
+            passPanelContainer.Controls.Add(changePass);
+        }
+
+        private void changePass_Click(object sender, EventArgs e)
+        {
+            WriteNewPassword writeNewPass = new WriteNewPassword();
+            try
+            {
+                bool flag = user.CheckChangePassword(
+                    oldPasswordWin.Text, newPasswordWin.Text, repPasswordWin.Text);
+                if (flag)
+                {
+                    if (writeNewPass.ChangeUserPassword(user, newPasswordWin.Text, connectionString))
+                    {
+                        MessageBox.Show("Смена пароля выполнена успешно!");
+                    }
+                    else { MessageBox.Show("Смена пароля не выполнена..."); }
+                }
+                else { throw new Exception("Введены неверные данные!"); }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Вызвано исключение: {ex}");
+            }
         }
 
         private void SwapButtons(System.Windows.Forms.Button buttonToHide, System.Windows.Forms.Button buttonToShow)
@@ -180,6 +287,11 @@ namespace databases_CW
                                 helper.ShowDialog();
                             }
                         }
+                        else if (root.root.name == "Разное")
+                        {
+                            ShowTxtSQL(false);
+                            CreatePasswordScreen();
+                        }
                         else
                         {
                             ShowTxtSQL(false);
@@ -286,61 +398,6 @@ namespace databases_CW
                                   MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            //Dictionary<string, List<string>> allTablesColumns = getColumns.GetAllTablesColumns();
-
-            //if (!allTablesColumns.ContainsKey(currentTableName))
-            //{
-            //    MessageBox.Show($"Не удалось получить информацию о таблице '{currentTableName}'",
-            //                  "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    return;
-            //}
-            //List<string> columns = allTablesColumns[currentTableName];
-
-            //// фильтр всего кроме id
-            //var editableColumns = columns
-            //    .Where(c => !c.Equals("id", StringComparison.OrdinalIgnoreCase))
-            //    .ToList();
-
-            //if (editableColumns.Count == 0)
-            //{
-            //    MessageBox.Show("В таблице нет редактируемых полей",
-            //                  "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    return;
-            //}
-
-            //var addForm = new AddNewRecordForm(currentTableName, editableColumns);
-
-            //if (addForm.ShowDialog() == DialogResult.OK)
-            //{
-            //    var values = new Dictionary<string, object>();
-
-            //    foreach (var fieldValue in addForm.FieldValues)
-            //    {
-            //        if (!string.IsNullOrWhiteSpace(fieldValue.Value))
-            //        {
-            //            values[fieldValue.Key] = fieldValue.Value;
-            //        }
-            //    }
-
-            //    if (values.Count == 0)
-            //    {
-            //        MessageBox.Show("Необходимо заполнить хотя бы одно поле",
-            //                      "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //        return;
-            //    }
-
-            //    if (record.AddRecord(currentTableName, connectionString, values))
-            //    {
-            //        directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
-            //        MessageBox.Show("Запись успешно добавлена!", "Успех",
-            //                      MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("Не удалось добавить запись", "Ошибка",
-            //                      MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    }
-            //}
         }
 
         // удалить запись
@@ -505,14 +562,5 @@ namespace databases_CW
                 downloadForm.SaveDataToFile();
             }
         }
-
-        // tmp - открыть html 
-        //private void button9_Click(object sender, EventArgs e)
-        //{
-        //    using (var form2 = new ShowHelpTabForm())
-        //    {
-        //        form2.ShowDialog(); 
-        //    }
-        //}
     }
 }
