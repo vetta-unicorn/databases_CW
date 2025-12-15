@@ -22,6 +22,7 @@ using databases_CW.Tabs;
 using databases_CW.HelpForms;
 using System.Reflection;
 using System.Runtime.Intrinsics.Arm;
+using databases_CW.Analytics;
 
 namespace databases_CW
 {
@@ -74,7 +75,7 @@ namespace databases_CW
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
             txtSQL.Visible = false;
             txtSQL.Font = new Font(txtSQL.Font.FontFamily, 13f);
-            
+
             record = new Records();
             getColumns = new GetColumns(connectionString);
             docSelect = new DocSelect(connectionString);
@@ -116,35 +117,35 @@ namespace databases_CW
             oldPasswordWin.Font = new Font("STFangsong", 13f, FontStyle.Regular);
             oldPasswordWin.Size = new Size(500, 60);
             oldPasswordWin.Location = new Point(
-                (passPanelContainer.Width - 500) / 2, 
-                (passPanelContainer.Height - 80) / 2 
+                (passPanelContainer.Width - 500) / 2,
+                (passPanelContainer.Height - 80) / 2
             );
             oldPasswordWin.PlaceholderText = "Введите старый пароль";
-            oldPasswordWin.PasswordChar = '*'; 
+            oldPasswordWin.PasswordChar = '*';
 
             // новый пароль
             newPasswordWin = new System.Windows.Forms.TextBox();
             newPasswordWin.Font = new Font("STFangsong", 13f, FontStyle.Regular);
             newPasswordWin.Size = new Size(500, 60);
             newPasswordWin.Location = new Point(
-                (passPanelContainer.Width - 500) / 2, 
-                oldPasswordWin.Bottom + 10 
+                (passPanelContainer.Width - 500) / 2,
+                oldPasswordWin.Bottom + 10
             );
 
             newPasswordWin.PlaceholderText = "Введите новый пароль";
-            newPasswordWin.PasswordChar = '*'; 
+            newPasswordWin.PasswordChar = '*';
 
             // повтор пароля
             repPasswordWin = new System.Windows.Forms.TextBox();
             repPasswordWin.Font = new Font("STFangsong", 13f, FontStyle.Regular);
             repPasswordWin.Size = new Size(500, 60);
             repPasswordWin.Location = new Point(
-                (passPanelContainer.Width - 500) / 2, 
-                newPasswordWin.Bottom + 10 
+                (passPanelContainer.Width - 500) / 2,
+                newPasswordWin.Bottom + 10
             );
 
             repPasswordWin.PlaceholderText = "Введите новый пароль повторно";
-            repPasswordWin.PasswordChar = '*'; 
+            repPasswordWin.PasswordChar = '*';
 
             // кнопка
             changePass = new System.Windows.Forms.Button();
@@ -603,6 +604,14 @@ namespace databases_CW
             {
                 downloadForm.SaveDataToFile();
             }
+        }
+
+        // tmp для перехода на дашборды
+        private void button9_Click(object sender, EventArgs e)
+        {
+            var analyticsForm = new AnalyticsDashboardForm();
+            analyticsForm.Show();
+            this.Close();
         }
     }
 }
