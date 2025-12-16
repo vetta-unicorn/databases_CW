@@ -18,9 +18,6 @@ namespace databases_CW.HelpForms
     {
         WebBrowser webBrowser1;
         private Panel panelContainer;
-
-        //string filePath =
-            //@"C:\Users\lisal\source\repos\databases_CW\databases_CW\Pictures\deepseek_html.html";
         public ShowHelpTabForm(string filePath)
         {
             InitializeComponent();
@@ -41,8 +38,6 @@ namespace databases_CW.HelpForms
 
         private void LoadHtmlFile(string filePath)
         {
-            //string filePath = @"C:\Users\lisal\source\repos\databases_CW\databases_CW\Pictures\deepseek_html.html";
-
             try
             {
                 if (File.Exists(filePath))

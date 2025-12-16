@@ -22,7 +22,6 @@ namespace databases_CW.DB_Write
             sb.AppendLine($"<h2>Data Export - {DateTime.Now}</h2>");
             sb.AppendLine("<table>");
 
-            // Заголовки
             sb.AppendLine("<tr>");
             foreach (DataColumn column in dt.Columns)
             {
@@ -30,7 +29,6 @@ namespace databases_CW.DB_Write
             }
             sb.AppendLine("</tr>");
 
-            // Данные
             foreach (DataRow row in dt.Rows)
             {
                 sb.AppendLine("<tr>");

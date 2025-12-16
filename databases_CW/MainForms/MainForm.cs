@@ -73,7 +73,7 @@ namespace databases_CW
             InitializeMenuStrip(table.menu);
 
             //menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
-            menuStrip1.BackColor = Color.FromArgb(255, 255, 224); // .LightYellow
+            menuStrip1.BackColor = Color.FromArgb(70, 130, 180); // .LightYellow
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
             txtSQL.Visible = false;
             txtSQL.Font = new Font(txtSQL.Font.FontFamily, 13f);
@@ -172,8 +172,6 @@ namespace databases_CW
             if (passPanelContainer != null)
             {
                 passPanelContainer.Visible = false;
-
-                // Сохраняем ссылки, если нужно будет пересоздать
                 if (oldPasswordWin != null)
                 {
                     oldPasswordWin.Dispose();
@@ -194,8 +192,6 @@ namespace databases_CW
                     changePass.Dispose();
                     changePass = null;
                 }
-
-                // Очищаем панель
                 passPanelContainer.Controls.Clear();
             }
         }
@@ -403,7 +399,6 @@ namespace databases_CW
             var metadataService = new DatabaseMetadataService(connectionString);
             var columnsMetadata = metadataService.GetTableColumns(currentTableName);
 
-            // Фильтруем колонки (исключаем id и другие системные)
             var editableColumns = columnsMetadata
                 .Where(c => !c.ColumnName.Equals("id", StringComparison.OrdinalIgnoreCase))
                 .ToList();
@@ -440,7 +435,6 @@ namespace databases_CW
 
                 if (record.AddRecord(currentTableName, connectionString, values))
                 {
-                    //directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
                     directories.LoadAndReplaceForeignKeys(currentTableName, connectionString,
                         dataGridViewReferences);
                     MessageBox.Show("Запись успешно добавлена!", "Успех",
@@ -619,6 +613,7 @@ namespace databases_CW
             }
         }
 
+        // открыть аналитику
         private void GoToAnalytics()
         {
             var analyticsForm = new AnalyticsDashboardForm();

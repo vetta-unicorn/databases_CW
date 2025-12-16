@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnalyticsDashboardForm));
             formsPlot1 = new ScottPlot.WinForms.FormsPlot();
             panel1 = new Panel();
+            pictureBox1 = new PictureBox();
             button2 = new Button();
             panel4 = new Panel();
             formsPlot3 = new ScottPlot.WinForms.FormsPlot();
@@ -42,13 +43,18 @@
             panel2 = new Panel();
             label1 = new Label();
             pictureBox2 = new PictureBox();
-            pictureBox1 = new PictureBox();
+            panel5 = new Panel();
+            pictureBox3 = new PictureBox();
+            panel6 = new Panel();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel4.SuspendLayout();
             panel3.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            panel6.SuspendLayout();
             SuspendLayout();
             // 
             // formsPlot1
@@ -61,28 +67,37 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.LightCyan;
+            panel1.BackColor = SystemColors.InactiveCaption;
             panel1.Controls.Add(pictureBox1);
-            panel1.Controls.Add(pictureBox2);
-            panel1.Controls.Add(button2);
             panel1.Controls.Add(panel4);
-            panel1.Controls.Add(button1);
             panel1.Controls.Add(panel3);
             panel1.Controls.Add(panel2);
+            panel1.Controls.Add(panel5);
+            panel1.Controls.Add(panel6);
             panel1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
             panel1.Location = new Point(12, 12);
             panel1.Name = "panel1";
             panel1.Size = new Size(1376, 685);
             panel1.TabIndex = 1;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(61, 440);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(241, 209);
+            pictureBox1.TabIndex = 8;
+            pictureBox1.TabStop = false;
+            // 
             // button2
             // 
-            button2.Location = new Point(659, 532);
+            button2.BackColor = SystemColors.ActiveCaption;
+            button2.Location = new Point(273, 177);
             button2.Name = "button2";
             button2.Size = new Size(236, 37);
             button2.TabIndex = 5;
             button2.Text = "Экспорт графиков";
-            button2.UseVisualStyleBackColor = true;
+            button2.UseVisualStyleBackColor = false;
             button2.Click += button2_Click;
             // 
             // panel4
@@ -106,7 +121,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.BackColor = Color.PapayaWhip;
+            label3.BackColor = SystemColors.GradientInactiveCaption;
             label3.Font = new Font("STFangsong", 13.7999992F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label3.Location = new Point(104, 12);
             label3.Name = "label3";
@@ -116,13 +131,14 @@
             // 
             // button1
             // 
+            button1.BackColor = SystemColors.ActiveCaption;
             button1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button1.Location = new Point(407, 532);
+            button1.Location = new Point(12, 177);
             button1.Name = "button1";
             button1.Size = new Size(236, 37);
             button1.TabIndex = 4;
             button1.Text = "Назад";
-            button1.UseVisualStyleBackColor = true;
+            button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
             // 
             // panel3
@@ -146,7 +162,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.BackColor = Color.PapayaWhip;
+            label2.BackColor = SystemColors.GradientInactiveCaption;
             label2.Font = new Font("STFangsong", 13.7999992F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label2.Location = new Point(89, 12);
             label2.Name = "label2";
@@ -167,7 +183,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.BackColor = Color.PapayaWhip;
+            label1.BackColor = SystemColors.GradientInactiveCaption;
             label1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Bold, GraphicsUnit.Point, 204);
             label1.Location = new Point(0, 12);
             label1.Name = "label1";
@@ -178,20 +194,40 @@
             // pictureBox2
             // 
             pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(1000, 445);
+            pictureBox2.Location = new Point(16, 16);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(274, 190);
+            pictureBox2.Size = new Size(330, 179);
             pictureBox2.TabIndex = 7;
             pictureBox2.TabStop = false;
             // 
-            // pictureBox1
+            // panel5
             // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(61, 426);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(241, 209);
-            pictureBox1.TabIndex = 8;
-            pictureBox1.TabStop = false;
+            panel5.BackColor = SystemColors.ControlLightLight;
+            panel5.Controls.Add(pictureBox2);
+            panel5.Location = new Point(967, 440);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(363, 211);
+            panel5.TabIndex = 9;
+            // 
+            // pictureBox3
+            // 
+            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
+            pictureBox3.Location = new Point(94, 12);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(331, 147);
+            pictureBox3.TabIndex = 10;
+            pictureBox3.TabStop = false;
+            // 
+            // panel6
+            // 
+            panel6.BackColor = SystemColors.ButtonHighlight;
+            panel6.Controls.Add(pictureBox3);
+            panel6.Controls.Add(button2);
+            panel6.Controls.Add(button1);
+            panel6.Location = new Point(400, 428);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(522, 237);
+            panel6.TabIndex = 11;
             // 
             // AnalyticsDashboardForm
             // 
@@ -202,6 +238,7 @@
             Name = "AnalyticsDashboardForm";
             Text = "Аналитика";
             panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             panel3.ResumeLayout(false);
@@ -209,7 +246,9 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            panel6.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -229,5 +268,8 @@
         private Button button2;
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
+        private Panel panel5;
+        private Panel panel6;
+        private PictureBox pictureBox3;
     }
 }

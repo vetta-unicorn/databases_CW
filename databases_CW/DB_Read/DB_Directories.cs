@@ -14,7 +14,7 @@ namespace databases_CW.DB
 {
     public class DB_Dicrectories
     {
-        // имя id -- имя таблицы
+        // id -> имя таблицы
         public Dictionary<string, string> IdToTableName = new Dictionary<string, string>()
         {
             { "city", "cities"},

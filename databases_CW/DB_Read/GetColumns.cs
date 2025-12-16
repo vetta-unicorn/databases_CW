@@ -83,8 +83,6 @@ namespace databases_CW.DB_Read
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-
-                    // Запрос для получения информации о колонках таблицы
                     string query = @"
                         SELECT column_name 
                         FROM information_schema.columns 

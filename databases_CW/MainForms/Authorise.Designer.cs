@@ -38,18 +38,19 @@
             textBox2 = new TextBox();
             textBox1 = new TextBox();
             label3 = new Label();
-            panel2 = new Panel();
             panel4 = new Panel();
             label1 = new Label();
-            panel3 = new Panel();
-            label2 = new Label();
             pictureBox1 = new PictureBox();
+            panel2 = new Panel();
+            pictureBox2 = new PictureBox();
+            pictureBox3 = new PictureBox();
             panel1.SuspendLayout();
             panel5.SuspendLayout();
-            panel2.SuspendLayout();
             panel4.SuspendLayout();
-            panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -66,8 +67,11 @@
             // panel1
             // 
             panel1.BackColor = SystemColors.GradientInactiveCaption;
-            panel1.Controls.Add(panel5);
+            panel1.Controls.Add(pictureBox3);
+            panel1.Controls.Add(pictureBox2);
+            panel1.Controls.Add(pictureBox1);
             panel1.Controls.Add(panel2);
+            panel1.Controls.Add(panel5);
             panel1.Location = new Point(0, -2);
             panel1.Name = "panel1";
             panel1.Size = new Size(1417, 679);
@@ -83,9 +87,9 @@
             panel5.Controls.Add(button1);
             panel5.Controls.Add(textBox1);
             panel5.Controls.Add(label3);
-            panel5.Location = new Point(149, 378);
+            panel5.Location = new Point(95, 232);
             panel5.Name = "panel5";
-            panel5.Size = new Size(1107, 224);
+            panel5.Size = new Size(1219, 229);
             panel5.TabIndex = 2;
             // 
             // button2
@@ -144,63 +148,60 @@
             label3.TabIndex = 3;
             label3.Text = "Введите имя пользователя и пароль";
             // 
-            // panel2
-            // 
-            panel2.BackColor = SystemColors.ControlLightLight;
-            panel2.Controls.Add(panel4);
-            panel2.Controls.Add(panel3);
-            panel2.Controls.Add(pictureBox1);
-            panel2.Location = new Point(28, 27);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1352, 313);
-            panel2.TabIndex = 1;
-            // 
             // panel4
             // 
             panel4.BackColor = SystemColors.Control;
             panel4.Controls.Add(label1);
-            panel4.Location = new Point(304, 32);
+            panel4.Location = new Point(191, 37);
             panel4.Name = "panel4";
-            panel4.Size = new Size(981, 99);
+            panel4.Size = new Size(873, 99);
             panel4.TabIndex = 2;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("STFangsong", 23.9999981F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 204);
-            label1.Location = new Point(282, 31);
+            label1.Location = new Point(229, 32);
             label1.Name = "label1";
             label1.Size = new Size(433, 44);
             label1.TabIndex = 0;
             label1.Text = "АИС Книжный магазин";
             // 
-            // panel3
-            // 
-            panel3.BackColor = SystemColors.Info;
-            panel3.Controls.Add(label2);
-            panel3.Location = new Point(304, 162);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(981, 99);
-            panel3.TabIndex = 1;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("STFangsong", 16.2F, FontStyle.Italic, GraphicsUnit.Point, 204);
-            label2.Location = new Point(813, 59);
-            label2.Name = "label2";
-            label2.Size = new Size(154, 31);
-            label2.TabIndex = 2;
-            label2.Text = "Версия 1.0.0";
-            // 
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(13, 58);
+            pictureBox1.Location = new Point(541, 489);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(272, 181);
+            pictureBox1.Size = new Size(321, 160);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
+            // 
+            // panel2
+            // 
+            panel2.BackColor = SystemColors.ActiveCaption;
+            panel2.Controls.Add(panel4);
+            panel2.Location = new Point(95, 14);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1219, 192);
+            panel2.TabIndex = 1;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.Location = new Point(118, 489);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(334, 160);
+            pictureBox2.TabIndex = 3;
+            pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
+            pictureBox3.Location = new Point(967, 489);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(327, 160);
+            pictureBox3.TabIndex = 4;
+            pictureBox3.TabStop = false;
             // 
             // Authorise
             // 
@@ -213,12 +214,12 @@
             panel1.ResumeLayout(false);
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
-            panel2.ResumeLayout(false);
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
-            panel3.ResumeLayout(false);
-            panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ResumeLayout(false);
         }
 
@@ -226,12 +227,6 @@
 
         private Button button1;
         private Panel panel1;
-        private Panel panel2;
-        private PictureBox pictureBox1;
-        private Panel panel4;
-        private Label label1;
-        private Panel panel3;
-        private Label label2;
         private Panel panel5;
         private TextBox textBox1;
         private Label label3;
@@ -239,5 +234,11 @@
         private Label label4;
         private TextBox textBox2;
         private Button button2;
+        private PictureBox pictureBox1;
+        private Panel panel2;
+        private Panel panel4;
+        private Label label1;
+        private PictureBox pictureBox3;
+        private PictureBox pictureBox2;
     }
 }

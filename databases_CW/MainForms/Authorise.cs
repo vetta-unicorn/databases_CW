@@ -30,7 +30,7 @@ namespace databases_CW
             {
                 username = Convert.ToString(textBox1.Text);
                 password = Convert.ToString(textBox2.Text);
- 
+
             }
             catch (Exception ex)
             {
@@ -60,5 +60,6 @@ namespace databases_CW
             textBox1.Text = "";
             textBox2.Text = "";
         }
+
     }
 }

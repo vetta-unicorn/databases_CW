@@ -40,7 +40,7 @@
             // button1
             // 
             button1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button1.Location = new Point(184, 234);
+            button1.Location = new Point(231, 234);
             button1.Name = "button1";
             button1.Size = new Size(137, 42);
             button1.TabIndex = 0;
@@ -58,7 +58,7 @@
             // button2
             // 
             button2.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            button2.Location = new Point(22, 234);
+            button2.Location = new Point(37, 234);
             button2.Name = "button2";
             button2.Size = new Size(137, 42);
             button2.TabIndex = 2;
@@ -107,7 +107,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.Info;
+            BackColor = SystemColors.ActiveCaption;
             ClientSize = new Size(416, 288);
             Controls.Add(button1);
             Controls.Add(label2);

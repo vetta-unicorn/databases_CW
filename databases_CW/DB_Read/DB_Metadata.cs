@@ -143,8 +143,6 @@ namespace databases_CW.DB_Read
                 {
                     return Encoding.UTF8.GetBytes(value);
                 }
-
-                // Если не удалось преобразовать, возвращаем как строку
                 return value;
             }
             catch
@@ -153,98 +151,4 @@ namespace databases_CW.DB_Read
             }
         }
     }
-
-    //public class DatabaseMetadataService
-    //{
-    //    private readonly string _connectionString;
-
-    //    public DatabaseMetadataService(string connectionString)
-    //    {
-    //        _connectionString = connectionString;
-    //    }
-
-    //    public object ConvertToColumnType(string dataType, string value)
-    //    {
-    //        if (string.IsNullOrWhiteSpace(value))
-    //            return DBNull.Value;
-
-    //        try
-    //        {
-    //            dataType = dataType.ToLower();
-
-    //            if (dataType.Contains("int") || dataType == "smallint" || dataType == "bigint")
-    //            {
-    //                if (int.TryParse(value, out int intValue))
-    //                    return intValue;
-    //            }
-    //            else if (dataType == "boolean" || dataType == "bool")
-    //            {
-    //                if (bool.TryParse(value, out bool boolValue))
-    //                    return boolValue;
-    //                return value == "1" || value.ToLower() == "true";
-    //            }
-    //            else if (dataType.Contains("decimal") || dataType.Contains("numeric") ||
-    //                     dataType.Contains("real") || dataType == "float" || dataType == "double")
-    //            {
-    //                if (decimal.TryParse(value, out decimal decimalValue))
-    //                    return decimalValue;
-    //            }
-    //            else if (dataType == "date" || dataType == "timestamp" || dataType.Contains("time"))
-    //            {
-    //                if (DateTime.TryParse(value, out DateTime dateValue))
-    //                    return dateValue;
-    //            }
-    //            else if (dataType == "bytea")
-    //            {
-    //                return Encoding.UTF8.GetBytes(value);
-    //            }
-    //            return value;
-    //        }
-    //        catch
-    //        {
-    //            return value; 
-    //        }
-    //    }
-
-    //public List<ColumnMetadata> GetTableColumns(string tableName)
-    //{
-    //    var columns = new List<ColumnMetadata>();
-
-    //    using (var connection = new NpgsqlConnection(_connectionString))
-    //    {
-    //        connection.Open();
-
-    //        string query = @"
-    //        SELECT 
-    //            column_name,
-    //            data_type,
-    //            is_nullable,
-    //            character_maximum_length
-    //            FROM information_schema.columns
-    //        WHERE table_name = @tableName
-    //        ORDER BY ordinal_position";
-
-    //        using (var command = new NpgsqlCommand(query, connection))
-    //        {
-    //            command.Parameters.AddWithValue("@tableName", tableName.ToLower());
-
-    //            using (var reader = command.ExecuteReader())
-    //            {
-    //                while (reader.Read())
-    //                {
-    //                    columns.Add(new ColumnMetadata
-    //                    {
-    //                        ColumnName = reader.GetString(0),
-    //                        DataType = reader.GetString(1),
-    //                        IsNullable = reader.GetString(2) == "YES",
-    //                        MaxLength = reader.IsDBNull(3) ? -1 : reader.GetInt32(3)
-    //                    });
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    return columns;
-    //}
-    //}
 }
