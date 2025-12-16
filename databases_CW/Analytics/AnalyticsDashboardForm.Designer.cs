@@ -108,7 +108,7 @@
             label3.AutoSize = true;
             label3.BackColor = Color.PapayaWhip;
             label3.Font = new Font("STFangsong", 13.7999992F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            label3.Location = new Point(78, 12);
+            label3.Location = new Point(104, 12);
             label3.Name = "label3";
             label3.Size = new Size(206, 26);
             label3.TabIndex = 1;
@@ -161,7 +161,7 @@
             panel2.Controls.Add(label1);
             panel2.Location = new Point(14, 20);
             panel2.Name = "panel2";
-            panel2.Size = new Size(419, 376);
+            panel2.Size = new Size(427, 376);
             panel2.TabIndex = 2;
             // 
             // label1
@@ -169,7 +169,7 @@
             label1.AutoSize = true;
             label1.BackColor = Color.PapayaWhip;
             label1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Bold, GraphicsUnit.Point, 204);
-            label1.Location = new Point(16, 12);
+            label1.Location = new Point(0, 12);
             label1.Name = "label1";
             label1.Size = new Size(422, 26);
             label1.TabIndex = 1;

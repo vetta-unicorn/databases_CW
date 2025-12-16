@@ -69,9 +69,11 @@ namespace databases_CW
             docs.InsertIntoTableMenu(table.menu);
             refTabs.InsertTabs(table.menu);
             otherTab.InsertTabs(table.menu);
+            table.menu.Add(new Tree(new Item("Аналитика", "analysis")));
             InitializeMenuStrip(table.menu);
 
-            menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
+            //menuStrip1.BackColor = Color.FromArgb(224, 255, 255); // .LightCyan
+            menuStrip1.BackColor = Color.FromArgb(255, 255, 224); // .LightYellow
             menuStrip1.Font = new Font("STFangsong", 14f, FontStyle.Regular);
             txtSQL.Visible = false;
             txtSQL.Font = new Font(txtSQL.Font.FontFamily, 13f);
@@ -103,7 +105,7 @@ namespace databases_CW
             passPanelContainer.Height = dataGridViewReferences.Height - 100;
             passPanelContainer.Left = dataGridViewReferences.Left + 100;
             passPanelContainer.Top = dataGridViewReferences.Top + 100;
-            passPanelContainer.BackColor = Color.FromArgb(240, 248, 255);
+            passPanelContainer.BackColor = Color.FromArgb(211, 211, 211);
             passPanelContainer.Visible = true;
 
             this.Controls.Add(passPanelContainer);
@@ -151,6 +153,7 @@ namespace databases_CW
             changePass = new System.Windows.Forms.Button();
             changePass.Text = "Сменить пароль";
             changePass.Font = new Font("STFangsong", 13f, FontStyle.Regular);
+            changePass.BackColor = Color.FromArgb(255, 255, 255);
             changePass.Size = new Size(500, 40);
             changePass.Location = new Point(
                 (passPanelContainer.Width - 500) / 2,
@@ -280,6 +283,14 @@ namespace databases_CW
                 ToolStripMenuItem menuItem = new ToolStripMenuItem(tree.root.name);
 
                 SetStatus(menuItem, tree);
+
+                if (tree.root.name == "Аналитика")
+                {
+                    menuItem.Click += (sender, e) =>
+                    {
+                        GoToAnalytics();
+                    };
+                }
 
                 if (tree.children != null && tree.children.Count > 0)
                 {
@@ -608,8 +619,7 @@ namespace databases_CW
             }
         }
 
-        // tmp для перехода на дашборды
-        private void button9_Click(object sender, EventArgs e)
+        private void GoToAnalytics()
         {
             var analyticsForm = new AnalyticsDashboardForm();
             analyticsForm.Show();

@@ -40,14 +40,13 @@
             panel1 = new Panel();
             button8 = new Button();
             button7 = new Button();
-            button9 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewReferences).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.BackColor = Color.LightCyan;
+            button1.BackColor = SystemColors.ScrollBar;
             button1.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
             button1.Location = new Point(594, 598);
             button1.Name = "button1";
@@ -126,7 +125,7 @@
             // 
             // button6
             // 
-            button6.BackColor = Color.LightCyan;
+            button6.BackColor = SystemColors.ScrollBar;
             button6.Font = new Font("STFangsong", 13.7999992F, FontStyle.Regular, GraphicsUnit.Point, 204);
             button6.Location = new Point(594, 547);
             button6.Name = "button6";
@@ -146,8 +145,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.Silver;
-            panel1.Controls.Add(button9);
+            panel1.BackColor = Color.LightCyan;
             panel1.Controls.Add(button8);
             panel1.Controls.Add(button7);
             panel1.Controls.Add(txtSQL);
@@ -180,16 +178,6 @@
             button7.Text = "Выполнить запрос";
             button7.UseVisualStyleBackColor = false;
             button7.Click += button7_Click;
-            // 
-            // button9
-            // 
-            button9.Location = new Point(158, 546);
-            button9.Name = "button9";
-            button9.Size = new Size(94, 29);
-            button9.TabIndex = 11;
-            button9.Text = "button9";
-            button9.UseVisualStyleBackColor = true;
-            button9.Click += button9_Click;
             // 
             // MainForm
             // 
@@ -229,6 +217,5 @@
         private Panel panel1;
         private Button button8;
         private Button button7;
-        private Button button9;
     }
 }
