@@ -429,7 +429,9 @@ namespace databases_CW
 
                 if (record.AddRecord(currentTableName, connectionString, values))
                 {
-                    directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+                    //directories.LoadTableData(currentTableName, connectionString, dataGridViewReferences);
+                    directories.LoadAndReplaceForeignKeys(currentTableName, connectionString,
+                        dataGridViewReferences);
                     MessageBox.Show("Запись успешно добавлена!", "Успех",
                                   MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -587,7 +589,7 @@ namespace databases_CW
                 ShowTxtSQL(false);
             }
 
-            passPanelContainer.Visible = false;
+            HideAndDisposePasswordControls();
         }
 
         // Выполнить запрос
