@@ -19,6 +19,7 @@ namespace databases_CW.Analytics
     public partial class AnalyticsDashboardForm : Form
     {
         List<PieSlice> slices = new List<PieSlice>();
+        List<PieSlice> price_slices = new List<PieSlice>();
         List<ScottPlot.Color> colors;
         string connectionString = "Host=localhost;Database=bookshop;Username=elisabeth_adm;Password=adm;";
         public AnalyticsDashboardForm()
@@ -30,6 +31,7 @@ namespace databases_CW.Analytics
             MakePricesPie();
             MakeCitiesBarSimple();
             MakeYearOrders();
+            CategoriesBookPrices();
         }
 
         private void MakePricesPie()
@@ -63,6 +65,52 @@ namespace databases_CW.Analytics
             formsPlot1.Plot.HideGrid();
 
             formsPlot1.Refresh();
+        }
+
+        private void CategoriesBookPrices()
+        {
+            int i = 0;
+            string pricesQuery =
+                "SELECT \r\n    category,\r\n   " +
+                " COUNT(*) AS количество_книг\r\n" +
+                "FROM (\r\n    SELECT \r\n        " +
+                "CASE \r\n " +
+                "WHEN i.price < 300 THEN 'эконом'\r\n    " +
+                "WHEN i.price BETWEEN 300 AND 800 THEN 'стандарт'\r\n" +
+                "WHEN i.price > 800 THEN 'премиум'\r\n" +
+                "ELSE 'не определена'\r\n" +
+                "END AS category\r\nFROM items i\r\n" +
+                "LEFT JOIN books b ON b.id = i.book_id\r\n) " +
+                "AS categorized_books\r\nGROUP BY category\r\n" +
+                "ORDER BY \r\n    CASE \r\n" +
+                "WHEN category = 'эконом' THEN 1\r\n" +
+                "WHEN category = 'стандарт' THEN 2\r\n" +
+                "WHEN category = 'премиум' THEN 3\r\n" +
+                "ELSE 4\r\nEND;";
+
+            CountDiagram pieDiag = new CountDiagram();
+            pieDiag.CreateDiag(connectionString, pricesQuery);
+            Dictionary<string, int> dict = pieDiag.ItemsToCount;
+            foreach (var item in dict)
+            {
+                price_slices.Add(new PieSlice
+                {
+                    Value = item.Value,
+                    FillColor = colors[i],
+                    Label = item.Key
+                });
+                if (i != dict.Count - 1) i++;
+            }
+            var pie = formsPlot4.Plot.Add.Pie(price_slices);
+            pie.ExplodeFraction = .1;
+            pie.SliceLabelDistance = 1.4;
+
+            formsPlot4.Plot.ShowLegend();
+
+            formsPlot4.Plot.Axes.Frameless();
+            formsPlot4.Plot.HideGrid();
+
+            formsPlot4.Refresh();
         }
 
         private void MakeCitiesBarSimple()
@@ -183,6 +231,9 @@ namespace databases_CW.Analytics
                     formsPlot3.Plot.SavePng(Path.Combine(folderPath, "График_заказов_по_месяцам.png"),
                                            formsPlot3.Width, formsPlot3.Height);
 
+                    formsPlot4.Plot.SavePng(Path.Combine(folderPath, "График_книг_категоризация_цены.png"),
+                                           formsPlot4.Width, formsPlot4.Height);
+
                     MessageBox.Show($"Все диаграммы сохранены в папке:\n{folderPath}",
                                   "Экспорт завершен",
                                   MessageBoxButtons.OK,
@@ -203,6 +254,11 @@ namespace databases_CW.Analytics
         private void button2_Click(object sender, EventArgs e)
         {
             ExportAllPlotsToPng();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
